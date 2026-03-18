@@ -1,0 +1,1862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GNFS StaffHub – Ghana National Fire Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --red:#B30000;--red-lt:#cc0000;--red-pale:#fff0f0;--red-dim:rgba(179,0,0,0.1);
+  --navy:#0A1F44;--navy-lt:#112952;--navy-dim:rgba(10,31,68,0.07);
+  --white:#ffffff;--off:#f4f5f9;--gray:#e5e8f0;--gray-md:#c2c8d8;--gray-dk:#8890a8;
+  --text:#1a2340;--text-lt:#4a5478;
+  --green:#00875a;--green-lt:#e3f9f0;
+  --amber:#d97706;--amber-lt:#fef3c7;
+  --blue:#1e6ef5;--blue-lt:#e8f0ff;
+  --sans:'Roboto',sans-serif;--display:'Syne',sans-serif;
+  --shadow:0 2px 10px rgba(10,31,68,0.07);
+  --shadow-md:0 6px 28px rgba(10,31,68,0.12);
+  --t:0.2s;--sidebar-w:252px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:15px}
+body{font-family:var(--sans);background:var(--off);color:var(--text);line-height:1.6;overflow-x:hidden;position:relative;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:url('https://images.pexels.com/photos/14644916/pexels-photo-14644916.jpeg?cs=srgb&dl=pexels-dom-sch-veg-man-381944029-14644916.jpg&fm=jpg') center/cover no-repeat;background-attachment:fixed;filter:blur(4px) brightness(0.65);transform:scale(1.05);}
+body::after{content:'';position:fixed;inset:0;z-index:-1;background:rgba(10,31,68,.45);}
+a{text-decoration:none;color:inherit}
+button{font-family:var(--sans);cursor:pointer}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--gray-md);border-radius:3px}
+
+/* LOGIN */
+#login-wrap{
+  position:fixed;inset:0;z-index:9999;
+  background:linear-gradient(135deg,var(--navy) 0%,#1a3a6e 50%,#0d2a5e 100%);
+  display:flex;align-items:center;justify-content:center;padding:1rem;
+  transition:opacity .4s,transform .4s;
+}
+.login-bg-pattern{
+  position:absolute;inset:0;opacity:0.04;
+  background-image:repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(255,255,255,1) 40px,rgba(255,255,255,1) 41px),
+    repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(255,255,255,1) 40px,rgba(255,255,255,1) 41px);
+}
+.login-card{
+  background:#fff;border-radius:20px;padding:2.8rem;
+  width:100%;max-width:420px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.35);
+  position:relative;z-index:1;
+}
+.login-logo{display:flex;align-items:center;gap:1rem;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--gray)}
+.gnfs-crest{width:56px;height:56px;flex-shrink:0}
+.login-brand h2{font-family:var(--display);font-size:1.1rem;font-weight:800;color:var(--navy);line-height:1.1}
+.login-brand span{font-size:0.7rem;color:var(--text-lt);letter-spacing:0.07em;text-transform:uppercase;display:block;margin-top:2px}
+.login-card h3{font-family:var(--display);font-size:1.25rem;font-weight:700;color:var(--navy);margin-bottom:0.3rem}
+.login-card>p{font-size:0.84rem;color:var(--text-lt);margin-bottom:1.8rem}
+.lf-group{margin-bottom:1rem}
+.lf-group label{display:block;font-size:0.78rem;font-weight:600;color:var(--text-lt);margin-bottom:0.4rem}
+.lf-group input{width:100%;border:1.5px solid var(--gray);border-radius:10px;padding:.65rem .9rem;font-family:var(--sans);font-size:.88rem;color:var(--text);outline:none;transition:border-color .2s,box-shadow .2s}
+.lf-group input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(10,31,68,.08)}
+.lf-row{display:flex;align-items:center;gap:.5rem;margin-top:.3rem;font-size:.78rem;color:var(--text-lt)}
+.lf-row a{color:var(--red);margin-left:auto}
+.btn-login{
+  width:100%;margin-top:1.3rem;padding:.8rem;border:none;border-radius:10px;
+  background:var(--red);color:#fff;font-family:var(--display);font-size:.92rem;font-weight:700;
+  letter-spacing:.04em;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+  transition:all .2s;
+}
+.btn-login:hover{background:var(--red-lt);box-shadow:0 6px 20px rgba(179,0,0,.35);transform:translateY(-1px)}
+.demo-note{background:var(--navy-dim);border-radius:8px;padding:.65rem .9rem;font-size:.76rem;color:var(--text-lt);margin-top:1rem;border:1px solid var(--gray)}
+.demo-note strong{color:var(--navy)}
+
+/* SIDEBAR */
+#sidebar{
+  position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);
+  background:var(--navy);
+  display:flex;flex-direction:column;z-index:200;
+  overflow-y:auto;overflow-x:hidden;
+  transition:transform var(--t);
+}
+.sb-head{
+  padding:1.3rem 1.3rem .9rem;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:.8rem;
+}
+.sb-crest{width:40px;height:40px;flex-shrink:0}
+.sb-head svg.sb-crest{display:none}
+.sb-brand h2{font-family:var(--display);font-size:.88rem;font-weight:800;color:#fff;line-height:1.1}
+.sb-brand span{font-size:.64rem;color:rgba(255,255,255,.38);letter-spacing:.07em;text-transform:uppercase}
+.sb-divider{height:1px;background:rgba(255,255,255,.07);margin:.4rem 0}
+.sb-label{font-size:.61rem;font-weight:700;letter-spacing:.17em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:.9rem 1.3rem .3rem}
+.sb-nav{list-style:none;padding:0 .65rem}
+.sb-nav li{margin-bottom:1px}
+.sb-nav a{
+  display:flex;align-items:center;gap:.72rem;
+  padding:.58rem .75rem;border-radius:8px;
+  font-size:.83rem;font-weight:500;color:rgba(255,255,255,.56);
+  transition:all var(--t);cursor:pointer;
+}
+.sb-nav a:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.9)}
+.sb-nav a.active{background:var(--red);color:#fff;box-shadow:0 3px 12px rgba(179,0,0,.4)}
+.sb-nav a .ni{width:17px;text-align:center;font-size:.85rem}
+.sb-nav a .nb{
+  margin-left:auto;background:rgba(255,255,255,.18);color:#fff;
+  font-size:.61rem;font-weight:700;border-radius:10px;padding:.1rem .42rem;
+  min-width:18px;text-align:center;
+}
+.sb-nav a.active .nb{background:rgba(255,255,255,.25)}
+.sb-emg{
+  margin:.8rem .65rem;padding:.9rem 1rem;
+  background:linear-gradient(135deg,#7a0000,var(--red));
+  border-radius:10px;
+}
+.sb-emg span{font-size:.72rem;color:rgba(255,255,255,.78);display:block;margin-bottom:.45rem}
+.sb-emg button{
+  width:100%;background:#fff;color:var(--red);border:none;border-radius:7px;
+  padding:.48rem;font-family:var(--display);font-size:.76rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;cursor:pointer;transition:all var(--t);
+}
+.sb-emg button:hover{background:var(--red-pale);box-shadow:0 3px 12px rgba(179,0,0,.4)}
+.sb-user{
+  margin-top:auto;padding:.9rem .85rem;
+  border-top:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:.7rem;
+}
+.sb-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--red),#ff4444);display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff;flex-shrink:0}
+.sb-info strong{display:block;font-size:.78rem;color:#fff;line-height:1.2}
+.sb-info span{font-size:.68rem;color:rgba(255,255,255,.38)}
+.sb-out{margin-left:auto;background:none;border:none;color:rgba(255,255,255,.38);font-size:.82rem;cursor:pointer;transition:color var(--t);padding:.3rem}
+.sb-out:hover{color:#fff}
+
+/* TOPBAR */
+#topbar{
+  position:fixed;top:0;left:var(--sidebar-w);right:0;height:60px;
+  background:#fff;border-bottom:1px solid var(--gray);
+  display:flex;align-items:center;gap:.8rem;
+  padding:0 1.6rem;z-index:100;
+  box-shadow:0 1px 0 var(--gray);
+}
+.topbar-left{display:flex;align-items:center;gap:.7rem}
+.hamburger{display:none;background:none;border:none;font-size:1.15rem;color:var(--navy);cursor:pointer}
+.topbar-title{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--navy)}
+.topbar-search{
+  display:flex;align-items:center;gap:.55rem;
+  background:var(--off);border:1.5px solid var(--gray);
+  border-radius:9px;padding:.42rem .85rem;flex:1;max-width:340px;
+  margin-left:auto;
+}
+.topbar-search input{background:none;border:none;outline:none;font-family:var(--sans);font-size:.83rem;color:var(--text);width:100%}
+.topbar-search i{color:var(--gray-dk);font-size:.82rem}
+.topbar-actions{display:flex;align-items:center;gap:.25rem}
+.top-btn{
+  width:36px;height:36px;border-radius:9px;border:none;background:none;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text-lt);font-size:.95rem;position:relative;cursor:pointer;
+  transition:all var(--t);
+}
+.top-btn:hover{background:var(--navy-dim);color:var(--navy)}
+.top-btn .dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--red);border:2px solid #fff}
+.top-emg{
+  background:var(--red);color:#fff;border:none;border-radius:9px;
+  padding:.42rem .9rem;font-family:var(--display);font-size:.76rem;font-weight:700;
+  letter-spacing:.05em;text-transform:uppercase;
+  display:flex;align-items:center;gap:.45rem;cursor:pointer;transition:all var(--t);
+}
+.top-emg:hover{background:var(--red-lt);box-shadow:0 4px 14px rgba(179,0,0,.35)}
+.top-profile{display:flex;align-items:center;gap:.5rem;cursor:pointer;padding:.3rem .6rem;border-radius:8px;transition:background var(--t)}
+.top-profile:hover{background:var(--navy-dim)}
+.top-pav{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,var(--navy),#2a4f8a);display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff}
+.top-pname{font-size:.8rem;font-weight:600;color:var(--navy)}
+
+/* MAIN */
+#main{margin-left:var(--sidebar-w);padding-top:60px;min-height:100vh}
+.page{display:none;padding:1.6rem;animation:fadeUp .28s ease}
+.page.active{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+
+/* PAGE HEADER */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.6rem;flex-wrap:wrap;gap:1rem}
+.ph-l h1{font-family:var(--display);font-size:1.45rem;font-weight:700;color:var(--navy);margin-bottom:.15rem;-webkit-text-stroke:1px white;}
+.ph-l p{font-size:.82rem;color:var(--text-lt)}
+.ph-r{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:.45rem;padding:.5rem 1.1rem;border-radius:8px;font-family:var(--sans);font-size:.81rem;font-weight:600;border:none;cursor:pointer;transition:all var(--t);letter-spacing:.02em}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover{background:var(--red-lt);box-shadow:0 4px 14px rgba(179,0,0,.3);transform:translateY(-1px)}
+.btn-navy{background:var(--navy);color:#fff}
+.btn-navy:hover{background:var(--navy-lt);box-shadow:0 4px 14px rgba(10,31,68,.25);transform:translateY(-1px)}
+.btn-outline{background:#fff;color:var(--navy);border:1.5px solid var(--gray)}
+.btn-outline:hover{border-color:var(--navy);background:var(--navy-dim)}
+.btn-ghost{background:none;border:none;color:var(--text-lt);font-size:.81rem;padding:.35rem .65rem;border-radius:7px;cursor:pointer}
+.btn-ghost:hover{background:var(--navy-dim);color:var(--navy)}
+.btn-sm{padding:.35rem .75rem;font-size:.75rem}
+
+/* STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;margin-bottom:1.6rem}
+.sc{
+  background:#fff;border-radius:13px;padding:1.2rem;
+  border:1px solid var(--gray);box-shadow:var(--shadow);
+  transition:all var(--t);position:relative;overflow:hidden;
+}
+.sc:hover{transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:13px 13px 0 0}
+.sc.c-red::before{background:var(--red)}
+.sc.c-navy::before{background:var(--navy)}
+.sc.c-green::before{background:var(--green)}
+.sc.c-amber::before{background:var(--amber)}
+.sc.c-blue::before{background:var(--blue)}
+.sc-icon{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1rem;margin-bottom:.8rem}
+.c-red .sc-icon{background:var(--red-dim);color:var(--red)}
+.c-navy .sc-icon{background:var(--navy-dim);color:var(--navy)}
+.c-green .sc-icon{background:var(--green-lt);color:var(--green)}
+.c-amber .sc-icon{background:var(--amber-lt);color:var(--amber)}
+.c-blue .sc-icon{background:var(--blue-lt);color:var(--blue)}
+.sc-num{font-family:var(--display);font-size:1.8rem;font-weight:700;line-height:1;color:var(--navy);margin-bottom:.25rem}
+.sc-label{font-size:.76rem;color:var(--text-lt);font-weight:500}
+.sc-delta{font-size:.7rem;margin-top:.45rem;display:flex;align-items:center;gap:.25rem}
+.sc-delta.up{color:var(--green)}.sc-delta.dn{color:var(--red)}
+
+/* CARDS */
+.card{background:#fff;border-radius:13px;border:1px solid var(--gray);box-shadow:var(--shadow);overflow:hidden}
+.ch{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 1.3rem;border-bottom:1px solid var(--gray)}
+.ch h3{font-family:var(--display);font-size:.92rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:.4rem}
+.cb{padding:1.3rem}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.1rem}
+.g21{display:grid;grid-template-columns:2fr 1fr;gap:1.1rem}
+
+/* TABLE */
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:var(--off);color:var(--text-lt);font-weight:600;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;padding:.65rem .95rem;text-align:left;border-bottom:1px solid var(--gray)}
+td{padding:.75rem .95rem;border-bottom:1px solid var(--gray);color:var(--text);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(10,31,68,.018)}
+.av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;flex-shrink:0}
+.tdn{display:flex;align-items:center;gap:.65rem}
+.tdn strong{display:block;font-weight:600;color:var(--navy);font-size:.83rem}
+.tdn span{font-size:.72rem;color:var(--text-lt)}
+
+/* BADGES */
+.bp{display:inline-flex;align-items:center;gap:.28rem;padding:.18rem .62rem;border-radius:20px;font-size:.7rem;font-weight:600}
+.bg-green{background:var(--green-lt);color:var(--green)}
+.bg-red{background:var(--red-pale);color:var(--red)}
+.bg-amber{background:var(--amber-lt);color:#92400e}
+.bg-navy{background:var(--blue-lt);color:var(--blue)}
+.bg-gray{background:var(--gray);color:var(--text-lt)}
+
+/* FORM */
+.fg{display:flex;flex-direction:column;gap:.38rem}
+.fg label{font-size:.75rem;font-weight:600;color:var(--text-lt);letter-spacing:.04em;text-transform:uppercase}
+.fg input,.fg select,.fg textarea{
+  background:#fff;border:1.5px solid var(--gray);border-radius:8px;
+  padding:.6rem .85rem;font-family:var(--sans);font-size:.86rem;color:var(--text);
+  outline:none;transition:border-color var(--t),box-shadow var(--t);width:100%;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(10,31,68,.07)}
+.fg textarea{resize:vertical;min-height:80px}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+.fgrid .full{grid-column:1/-1}
+.fsec{margin-bottom:1.5rem}
+.fsec h4{font-family:var(--display);font-size:.87rem;font-weight:700;color:var(--navy);margin-bottom:.9rem;padding-bottom:.5rem;border-bottom:1px solid var(--gray)}
+
+/* KANBAN */
+.kanban{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.kcol{background:var(--off);border-radius:11px;padding:.9rem;min-height:380px}
+.kcol-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.kcol-hd h4{font-size:.76rem;font-weight:700;color:var(--navy);text-transform:uppercase;letter-spacing:.07em}
+.kcnt{background:var(--gray);color:var(--text-lt);width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700}
+.kcard{background:#fff;border-radius:9px;padding:.85rem;margin-bottom:.6rem;border:1px solid var(--gray);box-shadow:var(--shadow);cursor:grab;transition:all var(--t)}
+.kcard:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.kcard-title{font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:.45rem}
+.kcard-due{font-size:.74rem;color:var(--text-lt)}
+.kcard-foot{display:flex;align-items:center;justify-content:space-between;margin-top:.65rem}
+.ktag{font-size:.66rem;font-weight:600;padding:.13rem .48rem;border-radius:5px}
+.k-hi{background:#fee2e2;color:#b91c1c}
+.k-md{background:var(--amber-lt);color:#92400e}
+.k-lo{background:var(--green-lt);color:#065f46}
+
+/* PROGRESS */
+.pb{height:6px;background:var(--gray);border-radius:3px;overflow:hidden;margin-top:.35rem}
+.pf{height:100%;border-radius:3px;transition:width .6s ease}
+.pf.red{background:var(--red)}.pf.green{background:var(--green)}.pf.navy{background:var(--navy)}.pf.amber{background:var(--amber)}
+
+/* STAFF GRID */
+.sg{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:1.1rem}
+.scard{background:#fff;border-radius:13px;padding:1.3rem;border:1px solid var(--gray);box-shadow:var(--shadow);text-align:center;transition:all var(--t)}
+.scard:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.sav{width:66px;height:66px;border-radius:50%;margin:0 auto .75rem;display:flex;align-items:center;justify-content:center;font-size:1.4rem;font-weight:700;color:#fff}
+.sname{font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.18rem}
+.srank{font-size:.72rem;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:.18rem}
+.sdept{font-size:.74rem;color:var(--text-lt)}
+.sbtns{display:flex;gap:.45rem;justify-content:center;margin-top:.9rem}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:.55rem;align-items:center;flex-wrap:wrap;margin-bottom:1.3rem}
+.fbar input,.fbar select{width:auto;padding:.45rem .75rem;font-size:.8rem;border:1.5px solid var(--gray);border-radius:8px;background:#fff;font-family:var(--sans);outline:none;color:var(--text)}
+.fbar input{min-width:220px}
+.fbar input:focus,.fbar select:focus{border-color:var(--navy)}
+
+/* INCIDENT */
+.iitem{display:flex;align-items:flex-start;gap:.9rem;padding:.9rem;border-radius:9px;border:1px solid var(--gray);margin-bottom:.65rem;background:#fff;transition:all var(--t)}
+.iitem:hover{border-color:var(--red);box-shadow:0 3px 12px rgba(179,0,0,.08)}
+.idot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.idot.active{background:var(--red)}.idot.contained{background:var(--amber)}.idot.resolved{background:var(--green)}
+.iinfo strong{font-size:.85rem;font-weight:600;color:var(--navy);display:block}
+.iinfo span{font-size:.76rem;color:var(--text-lt)}
+.imeta{margin-left:auto;text-align:right;flex-shrink:0}
+.imeta span{font-size:.7rem;color:var(--gray-dk);display:block;margin-top:.25rem}
+
+/* ANNOUNCE */
+.ann{display:flex;gap:.9rem;padding:.82rem 0;border-bottom:1px solid var(--gray)}
+.ann:last-child{border-bottom:none}
+.ann-ic{width:34px;height:34px;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.85rem}
+.ann-ic.r{background:var(--red-dim);color:var(--red)}
+.ann-ic.n{background:var(--navy-dim);color:var(--navy)}
+.ann-ic.g{background:var(--green-lt);color:var(--green)}
+.ann-ic.a{background:var(--amber-lt);color:var(--amber)}
+.ann-txt strong{font-size:.83rem;font-weight:600;color:var(--navy);display:block;margin-bottom:.12rem}
+.ann-txt span{font-size:.76rem;color:var(--text-lt)}
+.ann-time{margin-left:auto;font-size:.7rem;color:var(--gray-dk);white-space:nowrap}
+
+/* TRAINING CARD */
+.tcard{background:#fff;border-radius:10px;padding:1.1rem;border:1px solid var(--gray);margin-bottom:.7rem;display:flex;gap:.9rem;align-items:center}
+.tic{width:42px;height:42px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.05rem}
+.tic.r{background:var(--red-dim);color:var(--red)}.tic.n{background:var(--navy-dim);color:var(--navy)}.tic.g{background:var(--green-lt);color:var(--green)}
+.tinfo{flex:1}
+.tinfo strong{font-size:.85rem;font-weight:600;color:var(--navy);display:block;margin-bottom:.15rem}
+.tinfo span{font-size:.74rem;color:var(--text-lt)}
+.tpct{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--navy);min-width:38px;text-align:right}
+
+/* ATT ROW */
+.ar{display:flex;align-items:center;gap:.9rem;padding:.65rem 0;border-bottom:1px solid var(--gray)}
+.ar:last-child{border-bottom:none}
+.ar .av{flex-shrink:0}
+.ar-name{flex:1;font-size:.82rem;font-weight:500;color:var(--navy)}
+.ar-sub{font-size:.72rem;color:var(--text-lt);display:block}
+
+/* CLOCK */
+.clock-wrap{text-align:center;padding:1.4rem}
+.clock-time{font-family:var(--display);font-size:2.8rem;font-weight:800;color:var(--navy);letter-spacing:-1px;line-height:1}
+.clock-date{font-size:.83rem;color:var(--text-lt);margin:.4rem 0 1.1rem}
+.clock-btns{display:flex;gap:.7rem;justify-content:center}
+.clock-status{font-size:.76rem;color:var(--text-lt);margin-top:.9rem}
+
+/* MINI CAL */
+.mcal .mcal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+.mcal .mcal-hd strong{font-family:var(--display);font-size:.88rem;color:var(--navy);font-weight:700}
+.mcal .mcal-hd button{background:none;border:none;color:var(--text-lt);cursor:pointer;font-size:.85rem;padding:.2rem}
+.mcal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:.78rem}
+.mcal-grid .dl{color:var(--text-lt);font-size:.67rem;font-weight:600;padding:.2rem;text-transform:uppercase}
+.mcal-grid .day{padding:.3rem;border-radius:6px;cursor:pointer;transition:all var(--t);color:var(--text)}
+.mcal-grid .day:hover{background:var(--navy-dim)}
+.mcal-grid .day.today{background:var(--navy);color:#fff;font-weight:700}
+.mcal-grid .day.ev{position:relative}
+.mcal-grid .day.ev::after{content:'';width:4px;height:4px;background:var(--red);border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%)}
+
+/* CHARTS */
+.chart-wrap{position:relative;height:195px}
+
+/* MODAL */
+.mo{display:none;position:fixed;inset:0;background:rgba(10,31,68,.52);z-index:500;align-items:center;justify-content:center;padding:1rem}
+.mo.open{display:flex}
+.modal{background:#fff;border-radius:16px;width:100%;max-width:620px;max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.22)}
+.mhd{display:flex;align-items:center;justify-content:space-between;padding:1.3rem 1.5rem;border-bottom:1px solid var(--gray)}
+.mhd h3{font-family:var(--display);font-size:1rem;font-weight:700;color:var(--navy);display:flex;align-items:center;gap:.45rem}
+.mclose{background:none;border:none;font-size:1.1rem;color:var(--text-lt);cursor:pointer;transition:color var(--t);padding:.3rem}
+.mclose:hover{color:var(--red)}
+.mbody{padding:1.5rem}
+.mfoot{padding:.95rem 1.5rem;border-top:1px solid var(--gray);display:flex;justify-content:flex-end;gap:.6rem}
+
+/* TOAST */
+#toast{
+  position:fixed;bottom:1.4rem;right:1.4rem;z-index:9999;
+  background:var(--navy);color:#fff;
+  border-radius:11px;padding:.8rem 1.2rem;
+  font-size:.83rem;font-weight:500;
+  display:flex;align-items:center;gap:.65rem;
+  transform:translateY(70px);opacity:0;
+  transition:all .32s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:var(--shadow-md);max-width:310px;
+  pointer-events:none;
+}
+#toast.show{transform:translateY(0);opacity:1}
+#toast.s{border-left:4px solid var(--green)}
+#toast.e{border-left:4px solid var(--red)}
+#toast.w{border-left:4px solid var(--amber)}
+
+/* GNFS LOGO SVG */
+.gnfs-logo-svg{width:100%;height:100%}
+
+/* ── HERO SLIDER ── */
+#pg-dashboard{padding:0!important}
+.hero-slider{
+  position:relative;height:72vh;min-height:420px;max-height:680px;
+  overflow:hidden;border-radius:0;
+}
+.slide{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center top;
+  opacity:0;transition:opacity .85s ease,transform .85s ease;
+  transform:scale(1.04);
+  background-color:var(--navy);
+}
+.slide.active{opacity:1;transform:scale(1);z-index:2}
+.slide-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to top,rgba(8,18,40,.92) 0%,rgba(8,18,40,.45) 45%,rgba(8,18,40,.15) 100%),
+    linear-gradient(to right,rgba(8,18,40,.5) 0%,transparent 40%,transparent 60%,rgba(8,18,40,.5) 100%);
+}
+.slide-content{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:2.5rem 2.8rem 3rem;
+  animation:slideUp .6s ease both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.slide-rank{
+  display:inline-block;
+  background:var(--red);color:#fff;
+  font-size:.65rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  padding:.22rem .75rem;border-radius:20px;margin-bottom:.7rem;
+}
+.slide-name{
+  font-family:var(--display);font-size:2rem;font-weight:800;
+  color:#fff;line-height:1.15;margin-bottom:.45rem;
+  text-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.slide-dept{font-size:.88rem;color:rgba(255,255,255,.72);font-weight:500;letter-spacing:.02em}
+.slide-prev,.slide-next{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:10;
+  width:44px;height:44px;border-radius:50%;
+  background:rgba(255,255,255,.16);backdrop-filter:blur(6px);
+  border:1.5px solid rgba(255,255,255,.25);
+  color:#fff;font-size:.88rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;
+}
+.slide-prev{left:1.4rem}
+.slide-next{right:1.4rem}
+.slide-prev:hover,.slide-next:hover{background:var(--red);border-color:var(--red)}
+.slide-dots{
+  position:absolute;bottom:1.2rem;right:2.8rem;z-index:10;
+  display:flex;gap:.45rem;align-items:center;
+}
+.slide-dots span{
+  width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.38);
+  cursor:pointer;transition:all .25s;display:block;
+}
+.slide-dots span.on{background:#fff;width:22px;border-radius:4px}
+.slide-badge{
+  position:absolute;top:1.4rem;right:1.6rem;z-index:10;
+  display:flex;align-items:center;gap:.6rem;
+  background:rgba(10,31,68,.55);backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:10px;padding:.55rem .85rem;
+}
+.slide-badge strong{display:block;font-size:.78rem;font-weight:700;color:#fff;line-height:1.2}
+.slide-badge span{font-size:.64rem;color:rgba(255,255,255,.55)}
+
+/* ── DEPARTMENTS ── */
+.dept-section{padding:2rem 2rem 2.4rem}
+.dept-hd{margin-bottom:1.6rem}
+.dept-hd h2{font-family:var(--display);font-size:1.35rem;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem}
+.dept-hd p{font-size:.82rem;color:var(--text-lt)}
+.dept-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:1rem;
+}
+.dept-card{
+  background:#fff;border-radius:14px;padding:1.35rem 1.2rem 1.2rem;
+  border:1px solid var(--gray);box-shadow:var(--shadow);
+  cursor:pointer;transition:all .22s;position:relative;overflow:hidden;
+}
+.dept-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:transparent;transition:background .22s}
+.dept-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md)}
+.dept-card:hover::after{background:var(--red)}
+.dept-icon{
+  width:48px;height:48px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.15rem;color:#fff;margin-bottom:1rem;
+}
+.dept-card h4{font-family:var(--display);font-size:.9rem;font-weight:700;color:var(--navy);margin-bottom:.18rem}
+.dept-card>span{font-size:.72rem;font-weight:600;color:var(--red);display:block;margin-bottom:.5rem}
+.dept-card p{font-size:.75rem;color:var(--text-lt);line-height:1.5}
+
+/* RESPONSIVE */
+@media(max-width:1080px){.g21{grid-template-columns:1fr}.g2{grid-template-columns:1fr}.kanban{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #topbar{left:0}
+  .hamburger{display:flex}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .kanban{grid-template-columns:1fr}
+  .fgrid{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr}
+  .sg{grid-template-columns:1fr 1fr}
+  .topbar-search{display:none}
+  .top-emg span{display:none}
+  .hero-slider{height:55vw;min-height:280px}
+  .slide-name{font-size:1.3rem}
+  .slide-content{padding:1.5rem 1.3rem 2rem}
+  .dept-grid{grid-template-columns:1fr 1fr}
+  .dept-section{padding:1.4rem 1rem 1.8rem}
+}
+@media(max-width:480px){.stats-grid{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.dept-grid{grid-template-columns:1fr}.slide-name{font-size:1.1rem}}
+</style>
+</head>
+<body>
+
+<!-- ══════════ LOGIN ══════════ -->
+<div id="login-wrap">
+  <div class="login-bg-pattern"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <!-- Ghana National Fire Service official logo -->
+      <img class="gnfs-crest" src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="Ghana National Fire Service logo" loading="lazy">
+      <div class="login-brand">
+        <h2>GNFS StaffHub</h2>
+        <span>Ghana National Fire Service</span>
+        <span style="font-size:.65rem;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.05em">Staff Management Portal</span>
+      </div>
+    </div>
+    <h3>Welcome Back</h3>
+    <p>Sign in to access the GNFS staff management system.</p>
+    <div class="lf-group">
+      <label>Service Number / Email</label>
+      <input type="text" id="li-user" placeholder="GNFS-ID or email">
+    </div>
+    <div class="lf-group">
+      <label>Password</label>
+      <input type="password" id="li-pass" placeholder="Enter your password">
+    </div>
+    <div class="lf-row">
+      <input type="checkbox" id="li-rem" checked> <label for="li-rem" style="text-transform:none;margin:0;font-size:.78rem;color:var(--text-lt)">Remember me</label>
+      <a href="#">Forgot password?</a>
+    </div>
+    <button class="btn-login" onclick="doLogin()">
+      <i class="fa fa-sign-in-alt"></i> Sign In to StaffHub
+    </button>
+  </div>
+</div>
+
+<!-- ══════════ APP SHELL ══════════ -->
+<div id="app" style="display:none">
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-head">
+    <!-- Ghana National Fire Service official logo -->
+    <img class="sb-crest" src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="Ghana National Fire Service logo" loading="lazy">
+    <!-- GNFS crest in sidebar -->
+    <svg class="sb-crest" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 12 L178 45 L178 110 Q178 165 100 192 Q22 165 22 110 L22 45 Z" fill="#B30000" stroke="#7a0000" stroke-width="3"/>
+      <path d="M100 22 L168 52 L168 110 Q168 158 100 182 Q32 158 32 52 Z" fill="none" stroke="#FFD700" stroke-width="2"/>
+      <path d="M100 28 L162 56 L162 110 Q162 154 100 176 Q38 154 38 110 L38 56 Z" fill="#8B0000"/>
+      <path d="M100 55 C95 65 85 70 88 82 C90 90 96 93 100 100 C104 93 110 90 112 82 C115 70 105 65 100 55Z" fill="#FFD700"/>
+      <path d="M100 65 C97 72 91 75 93 83 C95 89 98 91 100 96 C102 91 105 89 107 83 C109 75 103 72 100 65Z" fill="#FF6600"/>
+      <polygon points="55,42 57,48 63,48 58,52 60,58 55,54 50,58 52,52 47,48 53,48" fill="#FFD700"/>
+      <polygon points="145,42 147,48 153,48 148,52 150,58 145,54 140,58 142,52 137,48 143,48" fill="#FFD700"/>
+    </svg>
+    <div class="sb-brand">
+      <h2>GNFS StaffHub</h2>
+      <span>Fire Service Portal</span>
+    </div>
+  </div>
+
+  <div class="sb-label">Main</div>
+  <ul class="sb-nav">
+    <li><a class="active" onclick="nav('dashboard',this)"><span class="ni"><i class="fa fa-home"></i></span> Home</a></li>
+    <li><a onclick="nav('staff',this)"><span class="ni"><i class="fa fa-users"></i></span> Staff Profiles <span class="nb">147</span></a></li>
+    <li><a onclick="nav('attendance',this)"><span class="ni"><i class="fa fa-calendar-check"></i></span> Attendance</a></li>
+    <li><a onclick="nav('leave',this)"><span class="ni"><i class="fa fa-calendar-times"></i></span> Leave Requests <span class="nb">8</span></a></li>
+    <li><a onclick="nav('tasks',this)"><span class="ni"><i class="fa fa-tasks"></i></span> Task & Duty</a></li>
+    <li><a onclick="nav('emergency',this)"><span class="ni"><i class="fa fa-exclamation-triangle"></i></span> Emergency Response</a></li>
+    <li><a onclick="nav('training',this)"><span class="ni"><i class="fa fa-graduation-cap"></i></span> Training & Dev</a></li>
+    <li><a onclick="nav('comms',this)"><span class="ni"><i class="fa fa-comments"></i></span> Communication <span class="nb">3</span></a></li>
+    <li><a onclick="nav('reports',this)"><span class="ni"><i class="fa fa-chart-bar"></i></span> Reports & Analytics</a></li>
+  </ul>
+
+  <div class="sb-label">System</div>
+  <ul class="sb-nav">
+    <li><a onclick="nav('settings',this)"><span class="ni"><i class="fa fa-cog"></i></span> Settings</a></li>
+  </ul>
+
+  <div class="sb-emg">
+    <span>🚨 Emergency Alert System</span>
+    <button onclick="triggerEmg()"><i class="fa fa-bell"></i> ACTIVATE ALERT</button>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-av" id="user-initials">AC</div>
+    <div class="sb-info">
+      <strong id="user-name">Administrator</strong>
+      <span>Administrator</span>
+    </div>
+    <button class="sb-out" onclick="doLogout()" title="Logout"><i class="fa fa-sign-out-alt"></i></button>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" onclick="toggleSB()"><i class="fa fa-bars"></i></button>
+    <span class="topbar-title" id="topbar-title">Home</span>
+  </div>
+  <div class="topbar-search">
+    <i class="fa fa-search"></i>
+    <input type="text" placeholder="Search staff, incidents, tasks...">
+  </div>
+  <div class="topbar-actions">
+    <button class="top-btn" onclick="toast('No new messages','s')" title="Messages"><i class="fa fa-envelope"></i></button>
+    <button class="top-btn" title="Notifications"><i class="fa fa-bell"></i><span class="dot"></span></button>
+    <button class="top-emg" onclick="triggerEmg()"><i class="fa fa-exclamation-triangle"></i> <span>EMERGENCY</span></button>
+    <div class="top-profile">
+      <div class="top-pav" id="topbar-initials">AC</div>
+      <span class="top-pname" id="topbar-name">Administrator</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════ PAGES ══════════ -->
+<main id="main">
+
+<!-- HOME / WELCOME -->
+<div class="page active" id="pg-dashboard">
+
+  <!-- OFFICER SLIDESHOW -->
+  <div class="hero-slider">
+    <div class="slide active" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/1.-Daniella-Mawusi-Ntow-Sapong.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Chief Fire Officer</span>
+        <h2 class="slide-name">CFO Daniella M. Ntow Sarpong</h2>
+        <p class="slide-dept">Chief Fire Officer — Ghana National Fire Service</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/ROBERTA.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Roberta Aggrey-Ghanson</h2>
+        <p class="slide-dept">Director, Operations</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/HEROINE.jpg')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Heroine Boakye</h2>
+        <p class="slide-dept">Director, Logistics</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/MARK.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Mark Brako-Appiah Jnr</h2>
+        <p class="slide-dept">Director, Finance</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/JENNIFER.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Jennifer N.Y. Quaye</h2>
+        <p class="slide-dept">Director, Policy, Planning, Monitoring & Evaluation</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/Doris.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Doris Lamptey</h2>
+        <p class="slide-dept">Director, Welfare</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/James.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO James O.Y. Kwarteng</h2>
+        <p class="slide-dept">Director, Legal</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/LILLY.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Lilly Ashong Robertson</h2>
+        <p class="slide-dept">Director, Fire Safety</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/GIWAH.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Henry F. Giwah</h2>
+        <p class="slide-dept">Director, Research & Information Technology</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/John.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO John A. Amartey</h2>
+        <p class="slide-dept">Director, Investigations</p>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <button class="slide-prev" onclick="slideMove(-1)"><i class="fa fa-chevron-left"></i></button>
+    <button class="slide-next" onclick="slideMove(1)"><i class="fa fa-chevron-right"></i></button>
+    <div class="slide-dots" id="slide-dots"></div>
+
+    <!-- Badge top-right -->
+    <div class="slide-badge">
+      <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="GNFS" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.4)">
+      <div>
+        <strong>GNFS StaffHub</strong>
+        <span>Accra Regional Command</span>
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- STAFF -->
+<div class="page" id="pg-staff">
+  <div class="ph">
+    <div class="ph-l"><h1>Staff Profiles</h1><p>147 personnel across all departments and stations</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm"><i class="fa fa-upload"></i> Import CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="openStaffModal()"><i class="fa fa-user-plus"></i> Add Staff</button>
+    </div>
+  </div>
+  <div class="fbar">
+    <input type="text" placeholder="Search by name or service number..." id="staff-search" oninput="filterStaff()">
+    <select id="staff-dept" onchange="filterStaff()"><option value="">All Departments</option><optgroup label="OPERATIONS"><option>Incidence Response</option></optgroup><optgroup label="ADMINISTRATION"><option>Chief Fire Officer’s Secretariat</option><option>Record & Statistics</option><option>Public Relations</option></optgroup><optgroup label="WELFARE"><option>Music</option><option>Guidance & Counseling</option><option>Religious Affairs</option><option>Messes/Canteens</option><option>Schemes/Associations</option></optgroup><optgroup label="FINANCE"><option>Accounts</option><option>Budget</option></optgroup><optgroup label="SPECIAL DUTIES"><option>Incident Investigation</option><option>Intelligence</option></optgroup><optgroup label="HUMAN RESOURCE, DEVELOPMENT & TRAINING"><option>Training</option><option>Human Resource Management</option><option>Sports and Recreation</option></optgroup><optgroup label="LOGISTICS"><option>Supply Chain Management</option><option>Estate</option><option>Project Office</option></optgroup><optgroup label="TECHNICAL SERVICES"><option>Maintenance</option><option>Transport</option></optgroup><optgroup label="POLICY, PLANNING, MONITORING & EVALUATION"><option>Policy Planning</option><option>Monitoring and Evaluation</option></optgroup><optgroup label="FIRE SAFETY"><option>Occupational Health and Safety</option><option>Public Education</option><option>Certification</option><option>Enforcement</option></optgroup><optgroup label="RURAL FIRES"><option>Bush fire Prevention and Suppression</option><option>Ecology Preservation</option></optgroup><optgroup label="LEGAL"><option>Legal</option></optgroup><optgroup label="HEALTH"><option>Health</option></optgroup><optgroup label="RESEARCH AND INFORMATION TECHNOLOGY"><option>Research</option><option>Information Communication Technology</option></optgroup><optgroup label="INTERNAL AUDIT"><option>Internal Audit</option></optgroup></select>
+    <select id="staff-rank" onchange="filterStaff()"><option value="">All Ranks</option><option>CFO</option><option>DCFO</option><option>ACFO II</option><option>ACFO I</option><option>DOI</option><option>DOII</option><option>DOIII</option><option>ADO I</option><option>ADO II</option><option>STNO I/GO I</option><option>STNO II/GO II</option><option>ASTNO/DGO</option><option>SUB O/AGO</option><option>LFM/LFW</option><option>SNR FM/SNR FW</option><option>FM/FW</option></select>
+    <select id="staff-status" onchange="filterStaff()"><option value="">All Status</option><option>On Duty</option><option>On Leave</option><option>Off Duty</option></select>
+    <div style="margin-left:auto;display:flex;gap:.4rem">
+      <button class="btn btn-outline btn-sm"><i class="fa fa-list"></i> List</button>
+      <button class="btn btn-navy btn-sm"><i class="fa fa-th"></i> Grid</button>
+    </div>
+  </div>
+  <div class="sg" id="staff-grid"></div>
+</div>
+
+<!-- ATTENDANCE -->
+<div class="page" id="pg-attendance">
+  <div class="ph">
+    <div class="ph-l"><h1>Attendance Management</h1><p>Today: Thursday, 12 March 2026</p></div>
+    <div class="ph-r"><button class="btn btn-outline btn-sm" onclick="toast('Attendance report exported','s')"><i class="fa fa-file-export"></i> Export Report</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-clock" style="color:var(--navy)"></i> Clock In / Out</h3></div>
+      <div class="cb">
+        <div class="clock-wrap">
+          <div class="clock-time" id="live-clock">--:--:--</div>
+          <div class="clock-date">Thursday, 12 March 2026</div>
+          <div class="clock-btns">
+            <button class="btn btn-primary" onclick="doClock('in')"><i class="fa fa-sign-in-alt"></i> Clock In</button>
+            <button class="btn btn-outline" onclick="doClock('out')"><i class="fa fa-sign-out-alt"></i> Clock Out</button>
+          </div>
+          <p class="clock-status" id="clock-status">You are not clocked in today.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-calendar" style="color:var(--navy)"></i> March 2026</h3></div>
+      <div class="cb" id="mini-cal"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch">
+      <h3><i class="fa fa-list" style="color:var(--navy)"></i> Today's Attendance Log</h3>
+      <div style="display:flex;gap:.45rem">
+        <span class="bp bg-green">Present: 112</span>
+        <span class="bp bg-amber">Late: 8</span>
+        <span class="bp bg-red">Absent: 27</span>
+      </div>
+    </div>
+    <div class="tw"><table id="att-table"></table></div>
+  </div>
+</div>
+
+<!-- LEAVE -->
+<div class="page" id="pg-leave">
+  <div class="ph">
+    <div class="ph-l"><h1>Leave Requests</h1><p>8 pending approvals from supervisors</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-leave')"><i class="fa fa-plus"></i> Request Leave</button></div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc c-green"><div class="sc-icon"><i class="fa fa-check-circle"></i></div><div class="sc-num">24</div><div class="sc-label">Approved</div></div>
+    <div class="sc c-amber"><div class="sc-icon"><i class="fa fa-hourglass-half"></i></div><div class="sc-num">8</div><div class="sc-label">Pending</div></div>
+    <div class="sc c-red"><div class="sc-icon"><i class="fa fa-times-circle"></i></div><div class="sc-num">3</div><div class="sc-label">Rejected</div></div>
+    <div class="sc c-navy"><div class="sc-icon"><i class="fa fa-calendar-alt"></i></div><div class="sc-num">15</div><div class="sc-label">Days Balance</div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-list" style="color:var(--navy)"></i> All Leave Requests</h3>
+      <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.35rem .65rem;font-size:.78rem;background:#fff;outline:none"><option>All Types</option><option>Annual Leave</option><option>Sick Leave</option><option>Study Leave</option></select>
+    </div>
+    <div class="tw"><table id="leave-table"></table></div>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div class="page" id="pg-tasks">
+  <div class="ph">
+    <div class="ph-l"><h1>Task & Duty Assignment</h1><p>Kanban-style operational task board</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-task')"><i class="fa fa-plus"></i> Create Task</button></div>
+  </div>
+  <div class="kanban" id="kanban-board"></div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="page" id="pg-emergency">
+  <div class="ph">
+    <div class="ph-l"><h1>Emergency Response</h1><p>Real-time incident command and resource management</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm" onclick="toast('Map view requires Google Maps API key','w')"><i class="fa fa-map"></i> Map View</button>
+      <button class="btn btn-primary btn-sm" onclick="openM('m-incident')"><i class="fa fa-plus"></i> Report Incident</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc c-red"><div class="sc-icon"><i class="fa fa-fire"></i></div><div class="sc-num">3</div><div class="sc-label">Active Incidents</div></div>
+    <div class="sc c-navy"><div class="sc-icon"><i class="fa fa-truck"></i></div><div class="sc-num">7</div><div class="sc-label">Units Deployed</div></div>
+    <div class="sc c-amber"><div class="sc-icon"><i class="fa fa-user-shield"></i></div><div class="sc-num">34</div><div class="sc-label">Personnel Responding</div></div>
+    <div class="sc c-green"><div class="sc-icon"><i class="fa fa-check"></i></div><div class="sc-num">12</div><div class="sc-label">Resolved Today</div></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-fire" style="color:var(--red)"></i> Incident Log</h3><span class="bp bg-red">3 Active</span></div>
+        <div style="padding:1rem" id="emg-incidents"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-map-marked-alt" style="color:var(--red)"></i> Incident Map</h3></div>
+        <div class="cb">
+          <div style="background:var(--navy-dim);border-radius:9px;height:260px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.9rem;border:2px dashed var(--gray-md)">
+            <i class="fa fa-map" style="font-size:2.2rem;color:var(--gray-md)"></i>
+            <span style="font-size:.82rem;color:var(--text-lt);text-align:center">Interactive map<br>(Google Maps API)</span>
+            <button class="btn btn-outline btn-sm" onclick="toast('Configure Google Maps API key in settings','w')"><i class="fa fa-key"></i> Configure API Key</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-truck" style="color:var(--navy)"></i> Resource Allocation</h3></div>
+        <div style="padding:.4rem 1.3rem">
+          <div class="ar"><div class="av" style="background:var(--red)">E3</div><div><span class="ar-name">Engine 03</span><span class="ar-sub">Accra Mall Structure Fire</span></div><span class="bp bg-red">Deployed</span></div>
+          <div class="ar"><div class="av" style="background:var(--red)">E7</div><div><span class="ar-name">Engine 07</span><span class="ar-sub">Accra Mall Structure Fire</span></div><span class="bp bg-red">Deployed</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">T1</div><div><span class="ar-name">Tanker 01</span><span class="ar-sub">Returning from Achimota</span></div><span class="bp bg-amber">Returning</span></div>
+          <div class="ar"><div class="av" style="background:var(--green)">HZ</div><div><span class="ar-name">HazMat Unit</span><span class="ar-sub">Tema Station 2 – On Scene</span></div><span class="bp bg-amber">On Scene</span></div>
+          <div class="ar"><div class="av" style="background:var(--green)">R2</div><div><span class="ar-name">Rescue 02</span><span class="ar-sub">Available at base</span></div><span class="bp bg-green">Available</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div class="page" id="pg-training">
+  <div class="ph">
+    <div class="ph-l"><h1>Training & Development</h1><p>Track certifications, progress and skill gaps</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-training')"><i class="fa fa-plus"></i> New Module</button></div>
+  </div>
+  <div class="g21">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-list" style="color:var(--navy)"></i> Active Training Modules</h3><span class="bp bg-green">6 Active</span></div>
+        <div class="cb" id="training-list"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-chart-bar" style="color:var(--navy)"></i> Training Completion by Department</h3></div>
+        <div class="cb"><div class="chart-wrap"><canvas id="chart-training"></canvas></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-exclamation-circle" style="color:var(--red)"></i> Certs Expiring Soon</h3></div>
+        <div style="padding:.4rem 1.3rem">
+          <div class="ar"><div class="av" style="background:var(--red)">KA</div><div><span class="ar-name">Kofi Asante</span><span class="ar-sub">HAZMAT Level 2</span></div><span class="bp bg-red">5 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">EO</div><div><span class="ar-name">Esi Owusu</span><span class="ar-sub">First Responder</span></div><span class="bp bg-amber">12 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">JM</div><div><span class="ar-name">James Mensah</span><span class="ar-sub">Search & Rescue</span></div><span class="bp bg-amber">18 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--navy)">AB</div><div><span class="ar-name">Abena Boateng</span><span class="ar-sub">Heavy Appliance Driver</span></div><span class="bp bg-navy">28 days</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-chart-pie" style="color:var(--navy)"></i> Skill Gap Analysis</h3></div>
+        <div class="cb">
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>HAZMAT Response</span><strong style="color:var(--red)">42%</strong></div><div class="pb"><div class="pf red" style="width:42%"></div></div></div>
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>Technical Rescue</span><strong style="color:var(--amber)">68%</strong></div><div class="pb"><div class="pf amber" style="width:68%"></div></div></div>
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>First Aid / EMS</span><strong style="color:var(--green)">87%</strong></div><div class="pb"><div class="pf green" style="width:87%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>Driver Training</span><strong style="color:var(--navy)">91%</strong></div><div class="pb"><div class="pf navy" style="width:91%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMS -->
+<div class="page" id="pg-comms">
+  <div class="ph">
+    <div class="ph-l"><h1>Communication Centre</h1><p>Internal messaging, announcements and document hub</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-announce')"><i class="fa fa-bullhorn"></i> New Announcement</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-bullhorn" style="color:var(--red)"></i> Announcements</h3></div>
+      <div style="padding:.6rem 1.3rem" id="comms-ann"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-comments" style="color:var(--navy)"></i> Messages</h3>
+        <button class="btn btn-sm btn-primary" onclick="toast('Opening secure messenger','s')"><i class="fa fa-plus"></i> New</button>
+      </div>
+      <div style="padding:.6rem 1.3rem" id="comms-msgs"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-folder" style="color:var(--amber)"></i> Document Repository</h3>
+      <button class="btn btn-outline btn-sm" onclick="toast('Upload ready','s')"><i class="fa fa-upload"></i> Upload</button>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Document</th><th>Category</th><th>Uploaded By</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><i class="fa fa-file-pdf" style="color:var(--red);margin-right:.5rem"></i>GNFS Operations Manual 2024</td><td><span class="bp bg-navy">Policy</span></td><td>Comm. Tetteh</td><td>Jan 15, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-word" style="color:var(--blue);margin-right:.5rem"></i>Emergency Response Protocol v3</td><td><span class="bp bg-red">Emergency</span></td><td>Dep. Comm. Adu</td><td>Feb 2, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-excel" style="color:var(--green);margin-right:.5rem"></i>Q1 Staff Performance Report</td><td><span class="bp bg-green">Reports</span></td><td>Admin</td><td>Mar 1, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-alt" style="color:var(--amber);margin-right:.5rem"></i>Training Schedule – March 2026</td><td><span class="bp bg-amber">Training</span></td><td>Training Dept</td><td>Mar 5, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="page" id="pg-reports">
+  <div class="ph">
+    <div class="ph-l"><h1>Reports & Analytics</h1><p>Operational insights and data-driven command decisions</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting PDF...','s')"><i class="fa fa-file-pdf"></i> PDF</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting Excel...','s')"><i class="fa fa-file-excel"></i> Excel</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting CSV...','s')"><i class="fa fa-file-csv"></i> CSV</button>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-fire" style="color:var(--red)"></i> Incident Statistics 2026</h3></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-incidents"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-calendar-times" style="color:var(--amber)"></i> Leave Distribution</h3></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-leave"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-star" style="color:var(--amber)"></i> Staff Performance Summary</h3>
+      <div style="display:flex;gap:.4rem">
+        <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.75rem;background:#fff;outline:none"><option>Q1 2026</option><option>Q4 2025</option></select>
+        <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.75rem;background:#fff;outline:none"><option>All Departments</option><option>Operations</option></select>
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Officer</th><th>Department</th><th>Attendance</th><th>Tasks Completed</th><th>Training</th><th>Rating</th></tr></thead>
+        <tbody>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--red)">KA</div><div><strong>Kofi Asante</strong><span>GNFS-001</span></div></div></td><td>Operations</td><td>96%</td><td>28/30</td><td><div class="pb" style="width:90px"><div class="pf green" style="width:90%"></div></div></td><td><span class="bp bg-green">Excellent</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--navy)">EO</div><div><strong>Esi Owusu</strong><span>GNFS-002</span></div></div></td><td>Training</td><td>88%</td><td>22/30</td><td><div class="pb" style="width:90px"><div class="pf amber" style="width:73%"></div></div></td><td><span class="bp bg-navy">Good</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--green)">JM</div><div><strong>James Mensah</strong><span>GNFS-003</span></div></div></td><td>Logistics</td><td>72%</td><td>18/30</td><td><div class="pb" style="width:90px"><div class="pf amber" style="width:60%"></div></div></td><td><span class="bp bg-amber">Average</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--amber)">AB</div><div><strong>Abena Boateng</strong><span>GNFS-004</span></div></div></td><td>Operations</td><td>100%</td><td>30/30</td><td><div class="pb" style="width:90px"><div class="pf green" style="width:100%"></div></div></td><td><span class="bp bg-green">Excellent</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="pg-settings">
+  <div class="ph"><div class="ph-l"><h1>System Settings</h1><p>Configure access control, security and system preferences</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-shield-alt" style="color:var(--red)"></i> Role-Based Access Control</h3></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Role</th><th>Users</th><th>Access Level</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><strong>Administrator</strong></td><td>4</td><td><span class="bp bg-red">Full Access</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>Supervisor</strong></td><td>18</td><td><span class="bp bg-navy">Dept Access</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>Fire Officer</strong></td><td>98</td><td><span class="bp bg-green">View + Edit Own</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>NCO / Staff</strong></td><td>27</td><td><span class="bp bg-gray">View Only</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-cog" style="color:var(--navy)"></i> General Settings</h3></div>
+        <div class="cb">
+          <div class="fg" style="margin-bottom:.9rem"><label>System Name</label><input value="GNFS StaffHub"></div>
+          <div class="fg" style="margin-bottom:.9rem"><label>Timezone</label><select><option>Africa/Accra (GMT+0)</option></select></div>
+          <div class="fg" style="margin-bottom:1rem"><label>Date Format</label><select><option>DD/MM/YYYY</option></select></div>
+          <button class="btn btn-primary btn-sm" onclick="toast('Settings saved successfully','s')"><i class="fa fa-save"></i> Save Changes</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-history" style="color:var(--amber)"></i> Audit Trail</h3></div>
+        <div style="padding:.6rem 1.3rem">
+          <div class="ann"><div class="ann-ic n"><i class="fa fa-sign-in-alt"></i></div><div class="ann-txt"><strong>Admin login</strong><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3e5f5a5357507e5950584d10595148105956">[email&#160;protected]</a> — Accra HQ</span></div><span class="ann-time">Just now</span></div>
+          <div class="ann"><div class="ann-ic r"><i class="fa fa-user-plus"></i></div><div class="ann-txt"><strong>New staff added</strong><span>Kwame Boateng — GNFS-148</span></div><span class="ann-time">1h ago</span></div>
+          <div class="ann"><div class="ann-ic g"><i class="fa fa-check-circle"></i></div><div class="ann-txt"><strong>Leave approved</strong><span>Esi Owusu — Annual Leave 6 days</span></div><span class="ann-time">3h ago</span></div>
+          <div class="ann"><div class="ann-ic a"><i class="fa fa-edit"></i></div><div class="ann-txt"><strong>Profile updated</strong><span>James Mensah — Rank changed</span></div><span class="ann-time">5h ago</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-lock" style="color:var(--green)"></i> Security Settings</h3></div>
+        <div class="cb">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--gray)">
+            <div><strong style="font-size:.83rem;display:block">Two-Factor Auth</strong><span style="font-size:.74rem;color:var(--text-lt)">Require 2FA for admin accounts</span></div>
+            <div style="width:40px;height:22px;background:var(--green);border-radius:11px;position:relative;cursor:pointer;flex-shrink:0"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;right:3px;box-shadow:0 1px 3px rgba(0,0,0,.2)"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--gray)">
+            <div><strong style="font-size:.83rem;display:block">Session Timeout</strong><span style="font-size:.74rem;color:var(--text-lt)">Auto-logout after inactivity</span></div>
+            <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.78rem;background:#fff;outline:none"><option>30 minutes</option><option>1 hour</option></select>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div><strong style="font-size:.83rem;display:block">Password Policy</strong><span style="font-size:.74rem;color:var(--text-lt)">Min 8 chars, numbers & symbols</span></div>
+            <span class="bp bg-green">Enforced</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div><!-- end app -->
+
+<!-- MODALS -->
+<div class="mo" id="m-addstaff">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-user-plus" style="color:var(--red)"></i> Add New Staff Member</h3><button class="mclose" onclick="closeM('m-addstaff')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <input type="hidden" id="staff-index">
+      <div class="fsec"><h4>Personal Information</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Full Name *</label><input id="staff-name" placeholder="e.g. Kofi Asante"></div>
+          <div class="fg"><label>Service Number</label><input id="staff-sn" placeholder="GNFS-2026-XXX"></div>
+          <div class="fg"><label>Date of Birth</label><input id="staff-dob" type="text" placeholder="dd/mm/yy"></div>
+          <div class="fg"><label>Hometown</label><input id="staff-home" placeholder="e.g. Kumasi, Ashanti Region"></div>
+          <div class="fg"><label>Place of Birth</label><input id="staff-pob" placeholder="e.g. Accra"></div>
+          <div class="fg"><label>Gender *</label><select id="staff-gender" onchange="updateRankOptions(this.value)"><option value="" disabled selected>Select gender</option><option>Male</option><option>Female</option></select></div>
+        </div>
+      </div>
+      <div class="fsec"><h4>Service Information</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Rank *</label><select id="staff-rank-input"><option value="" disabled selected>Select rank</option><option>CFO</option><option>DCFO</option><option>ACFO II</option><option>ACFO I</option><option>DOI</option><option>DOII</option><option>DOIII</option><option>ADO I</option><option>ADO II</option><option>STNO I/GO I</option><option>STNO II/GO II</option><option>ASTNO/DGO</option><option>SUB O/AGO</option><option>LFM/LFW</option><option>SNR FM/SNR FW</option><option>FM/FW</option></select></div>
+          <div class="fg"><label>Department *</label><select id="staff-dept-input"><option value="" disabled selected>Select department</option><optgroup label="OPERATIONS"><option>Incidence Response</option></optgroup><optgroup label="ADMINISTRATION"><option>Chief Fire Officer’s Secretariat</option><option>Record & Statistics</option><option>Public Relations</option></optgroup><optgroup label="WELFARE"><option>Music</option><option>Guidance & Counseling</option><option>Religious Affairs</option><option>Messes/Canteens</option><option>Schemes/Associations</option></optgroup><optgroup label="FINANCE"><option>Accounts</option><option>Budget</option></optgroup><optgroup label="SPECIAL DUTIES"><option>Incident Investigation</option><option>Intelligence</option></optgroup><optgroup label="HUMAN RESOURCE, DEVELOPMENT & TRAINING"><option>Training</option><option>Human Resource Management</option><option>Sports and Recreation</option></optgroup><optgroup label="LOGISTICS"><option>Supply Chain Management</option><option>Estate</option><option>Project Office</option></optgroup><optgroup label="TECHNICAL SERVICES"><option>Maintenance</option><option>Transport</option></optgroup><optgroup label="POLICY, PLANNING, MONITORING & EVALUATION"><option>Policy Planning</option><option>Monitoring and Evaluation</option></optgroup><optgroup label="FIRE SAFETY"><option>Occupational Health and Safety</option><option>Public Education</option><option>Certification</option><option>Enforcement</option></optgroup><optgroup label="RURAL FIRES"><option>Bush fire Prevention and Suppression</option><option>Ecology Preservation</option></optgroup><optgroup label="LEGAL"><option>Legal</option></optgroup><optgroup label="HEALTH"><option>Health</option></optgroup><optgroup label="RESEARCH AND INFORMATION TECHNOLOGY"><option>Research</option><option>Information Communication Technology</option></optgroup><optgroup label="INTERNAL AUDIT"><option>Internal Audit</option></optgroup></select></div>
+          <div class="fg"><label>Region *</label><select id="staff-region" onchange="updateStations(this.value)"><option value="" disabled selected>Select region</option><option>GREATER ACCRA REGION</option><option>CENTRAL REGION</option><option>ASHANTI REGION</option><option>EASTERN REGION</option><option>VOLTA REGION</option><option>NORTHERN REGION</option><option>BONO / BONO EAST / AHAFO</option><option>WESTERN REGION</option><option>UPPER REGIONS</option><option>OTHER REGIONS</option></select></div>
+          <div class="fg"><label>Station</label><select id="staff-station"><option value="" disabled selected>Select region first</option></select></div>
+          <div class="fg"><label>Date of Appointment</label><input id="staff-appointment" type="text" placeholder="dd/mm/yy"></div>
+        </div>
+      </div>
+      <div class="fsec"><h4>Contact Details</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Phone Number</label><input id="staff-phone" placeholder="+233 XX XXX XXXX"></div>
+          <div class="fg"><label>Email Address</label><input id="staff-email" type="email" placeholder="name@gnfs.gov.gh"></div>
+          <div class="fg"><label>Emergency Contact Name</label><input id="staff-emerg-name" placeholder="Next of kin name"></div>
+          <div class="fg"><label>Emergency Contact Phone</label><input id="staff-emerg-phone" placeholder="+233 XX XXX XXXX"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-addstaff')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStaff();"><i class="fa fa-save"></i> Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-incident">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-exclamation-triangle" style="color:var(--red)"></i> Report New Incident</h3><button class="mclose" onclick="closeM('m-incident')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg"><label>Incident Type *</label><select><option>Structure Fire</option><option>Bush/Forest Fire</option><option>Vehicle Fire</option><option>Gas Leak</option><option>HAZMAT</option><option>Rescue Operation</option><option>Medical Emergency</option></select></div>
+        <div class="fg"><label>Priority Level *</label><select><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="fg full"><label>Location *</label><input placeholder="Full address or GPS coordinates"></div>
+        <div class="fg full"><label>Description *</label><textarea placeholder="Describe the incident in detail..."></textarea></div>
+        <div class="fg"><label>Estimated Casualties</label><input type="number" placeholder="0" min="0"></div>
+        <div class="fg"><label>Resources Required</label><select><option>1 Engine</option><option>2 Engines + Tanker</option><option>Full Response</option><option>HazMat Only</option></select></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-incident')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeM('m-incident');toast('Incident reported — units dispatched!','s')"><i class="fa fa-paper-plane"></i> Dispatch Response</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-leave">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-calendar-alt" style="color:var(--navy)"></i> Submit Leave Request</h3><button class="mclose" onclick="closeM('m-leave')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg"><label>Leave Type *</label><select><option>Annual Leave</option><option>Sick Leave</option><option>Study Leave</option><option>Compassionate Leave</option></select></div>
+        <div class="fg"><label>Duration</label><select><option>Full Day(s)</option><option>Half Day AM</option><option>Half Day PM</option></select></div>
+        <div class="fg"><label>Start Date *</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>End Date *</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg full"><label>Reason / Notes</label><textarea placeholder="Briefly state the reason for leave..."></textarea></div>
+        <div class="fg"><label>Reporting Supervisor</label><select><option>Dep. Comm. Adu</option><option>Sr. Officer Tetteh</option><option>Asst. Comm. Agyei</option></select></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-leave')">Cancel</button>
+      <button class="btn btn-navy" onclick="closeM('m-leave');toast('Leave request submitted for approval','s')"><i class="fa fa-paper-plane"></i> Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-task">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-tasks" style="color:var(--navy)"></i> Create Task</h3><button class="mclose" onclick="closeM('m-task')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Task Title *</label><input placeholder="e.g. Equipment maintenance check"></div>
+        <div class="fg"><label>Priority</label><select><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="fg"><label>Assign To</label><select><option>Kofi Asante</option><option>Esi Owusu</option><option>James Mensah</option><option>Abena Boateng</option><option>Entire Team</option></select></div>
+        <div class="fg"><label>Deadline</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>Category</label><select><option>Maintenance</option><option>Operations</option><option>Training</option><option>Administrative</option></select></div>
+        <div class="fg full"><label>Description</label><textarea placeholder="Detailed task instructions and requirements..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-task')">Cancel</button>
+      <button class="btn btn-navy" onclick="closeM('m-task');toast('Task created and assigned','s')"><i class="fa fa-plus"></i> Create Task</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-announce">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-bullhorn" style="color:var(--red)"></i> New Announcement</h3><button class="mclose" onclick="closeM('m-announce')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Title *</label><input placeholder="Announcement title..."></div>
+        <div class="fg"><label>Category</label><select><option>General</option><option>Emergency</option><option>Training</option><option>Administrative</option></select></div>
+        <div class="fg"><label>Audience</label><select><option>All Staff</option><option>Officers Only</option><option>Supervisors Only</option></select></div>
+        <div class="fg full"><label>Message *</label><textarea rows="4" placeholder="Announcement content..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-announce')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeM('m-announce');toast('Announcement published to all staff','s')"><i class="fa fa-paper-plane"></i> Publish</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-training">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-graduation-cap" style="color:var(--navy)"></i> Create Training Module</h3><button class="mclose" onclick="closeM('m-training')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Module Title *</label><input placeholder="e.g. Advanced Fire Suppression Techniques"></div>
+        <div class="fg"><label>Category</label><select><option>Fire Suppression</option><option>HAZMAT</option><option>Technical Rescue</option><option>First Aid</option><option>Leadership</option></select></div>
+        <div class="fg"><label>Duration</label><input placeholder="e.g. 3 days"></div>
+        <div class="fg"><label>Lead Instructor</label><input placeholder="Instructor name"></div>
+        <div class="fg"><label>Start Date</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>End Date</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg full"><label>Description</label><textarea placeholder="Training objectives and overview..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-training')">Cancel</button>
+      <button class="btn btn-navy" onclick="closeM('m-training');toast('Training module created','s')"><i class="fa fa-save"></i> Create Module</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+'use strict';
+// ── DATA ──
+function loadFromStorage(key, fallback){
+  try{
+    const raw=localStorage.getItem('gnfs_'+key);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      return parsed;
+    }
+  }catch(e){}
+  return fallback;
+}
+function saveToStorage(key,value){
+  try{localStorage.setItem('gnfs_'+key,JSON.stringify(value));}catch(e){}
+}
+
+let STAFF = loadFromStorage('staff', [
+  {id:'GNFS-001',n:'Kofi Asante',sn:'GNFS-001',rank:'Senior Officer',dept:'Operations',status:'On Duty',col:'#B30000'},
+  {id:'GNFS-002',n:'Esi Owusu',sn:'GNFS-002',rank:'Fire Officer',dept:'Training',status:'On Duty',col:'#0A1F44'},
+  {id:'GNFS-003',n:'James Mensah',sn:'GNFS-003',rank:'NCO',dept:'Logistics',status:'On Leave',col:'#00875a'},
+  {id:'GNFS-004',n:'Abena Boateng',sn:'GNFS-004',rank:'Senior Officer',dept:'Operations',status:'On Duty',col:'#d97706'},
+  {id:'GNFS-005',n:'Kwame Tetteh',sn:'GNFS-005',rank:'Asst. Commissioner',dept:'Administration',status:'On Duty',col:'#1e6ef5'},
+  {id:'GNFS-006',n:'Akua Darko',sn:'GNFS-006',rank:'Fire Officer',dept:'Operations',status:'On Duty',col:'#B30000'},
+  {id:'GNFS-007',n:'Samuel Adu',sn:'GNFS-007',rank:'NCO',dept:'Logistics',status:'Off Duty',col:'#0A1F44'},
+  {id:'GNFS-008',n:'Grace Asare',sn:'GNFS-008',rank:'Fire Officer',dept:'Training',status:'On Duty',col:'#00875a'},
+  {id:'GNFS-009',n:'Yaw Boateng',sn:'GNFS-009',rank:'Senior Officer',dept:'Operations',status:'On Duty',col:'#7c3aed'},
+  {id:'GNFS-010',n:'Akosua Mensah',sn:'GNFS-010',rank:'Fire Officer',dept:'Administration',status:'On Duty',col:'#0891b2'},
+]);
+let KANBAN = loadFromStorage('kanban', {
+  todo:[{t:'Annual Equipment Inspection',p:'high',a:'KA',d:'Mar 15'},{t:'Update Emergency Contact List',p:'med',a:'EO',d:'Mar 18'},{t:'Prepare Q2 Training Schedule',p:'low',a:'AB',d:'Mar 22'}],
+  progress:[{t:'Fire Hose Pressure Testing',p:'high',a:'JM',d:'Mar 13'},{t:'Station 3 Renovation Review',p:'med',a:'KT',d:'Mar 16'}],
+  done:[{t:'March Roster Publication',p:'low',a:'GD',d:'Mar 10'},{t:'New Recruit Orientation',p:'med',a:'KA',d:'Mar 8'},{t:'HAZMAT Drill Report',p:'high',a:'EO',d:'Mar 7'}],
+  blocked:[{t:'Vehicle Repair – Engine 04',p:'high',a:'SA',d:'TBD'}]
+});
+let INCIDENTS = loadFromStorage('incidents', [
+  {t:'Structure Fire – Accra Mall',loc:'Accra Central',units:'Engine 03, Engine 07',st:'active',time:'12 min ago'},
+  {t:'Gas Leak – Tema Industrial Area',loc:'Tema Station 2',units:'HazMat Unit',st:'contained',time:'1h 22m ago'},
+  {t:'Bush Fire – Achimota Forest',loc:'Achimota',units:'Tanker 01',st:'resolved',time:'3h ago'},
+  {t:'Vehicle Fire – N1 Highway',loc:'Ofankor Junction',units:'Engine 02',st:'resolved',time:'5h ago'},
+]);
+
+let editingStaffId = null;
+
+// ── CHART INSTANCES (track to avoid re-init) ──
+const CHARTS = {};
+
+// ── LOGIN ──
+function doLogin(){
+  const u=document.getElementById('li-user').value.trim();
+  const p=document.getElementById('li-pass').value.trim();
+  if(!u||!p){toast('Please enter your credentials','e');return;}
+  const remember=document.getElementById('li-rem').checked;
+  if(remember){
+    saveToStorage('login',{user:u,pass:p});
+  } else {
+    localStorage.removeItem('gnfs_login');
+  }
+  const lw=document.getElementById('login-wrap');
+  lw.style.cssText='opacity:0;transform:scale(0.96);transition:all .4s;position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0A1F44,#1a3a6e)';
+  setTimeout(()=>{
+    lw.style.display='none';
+    document.getElementById('app').style.display='block';
+    const displayName = u.split('@')[0].replace(/[\.\-_]/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+    const initials = displayName.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase();
+    document.getElementById('user-name').textContent = displayName;
+    document.getElementById('user-initials').textContent = initials;
+    document.getElementById('topbar-name').textContent = displayName;
+    document.getElementById('topbar-initials').textContent = initials;
+    initApp();
+    toast(`Welcome, ${displayName} 👋`,'s');
+  },400);
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const lw=document.getElementById('login-wrap');
+    if(lw&&lw.style.display!=='none'&&!lw.style.opacity)doLogin();
+  }
+});
+
+function initLogin(){
+  const stored=loadFromStorage('login',null);
+  if(stored&&stored.user){
+    document.getElementById('li-user').value=stored.user;
+    document.getElementById('li-pass').value=stored.pass||'';
+    document.getElementById('li-rem').checked=true;
+  }
+}
+document.addEventListener('DOMContentLoaded',initLogin);
+
+// ── APP INIT (called once after login) ──
+function initApp(){
+  buildStaffGrid(STAFF);
+  updateDashboardStats();
+  buildAttTable();
+  buildLeaveTable();
+  buildKanban();
+  buildIncidents('dash-incidents');
+  buildIncidents('emg-incidents');
+  buildTraining();
+  buildComms();
+  buildMiniCal();
+  startClock();
+  // Init slider on first load
+  requestAnimationFrame(()=>initSlider());
+  // Attach modal overlay close handlers
+  document.querySelectorAll('.mo').forEach(o=>{
+    o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
+  });
+}
+
+// ── HERO SLIDER ──
+let SLIDE_IDX=0,SLIDE_TIMER=null;
+function initSlider(){
+  const slides=document.querySelectorAll('.hero-slider .slide');
+  const dotsEl=document.getElementById('slide-dots');
+  if(!slides.length)return;
+  // Build dots
+  if(dotsEl){
+    dotsEl.innerHTML='';
+    slides.forEach((_,i)=>{
+      const s=document.createElement('span');
+      if(i===0)s.className='on';
+      s.onclick=()=>goSlide(i);
+      dotsEl.appendChild(s);
+    });
+  }
+  startSlideTimer();
+}
+function goSlide(n){
+  const slides=document.querySelectorAll('.hero-slider .slide');
+  const dots=document.querySelectorAll('#slide-dots span');
+  slides[SLIDE_IDX].classList.remove('active');
+  dots[SLIDE_IDX]&&dots[SLIDE_IDX].classList.remove('on');
+  SLIDE_IDX=(n+slides.length)%slides.length;
+  slides[SLIDE_IDX].classList.add('active');
+  dots[SLIDE_IDX]&&dots[SLIDE_IDX].classList.add('on');
+  // Re-trigger content animation
+  const content=slides[SLIDE_IDX].querySelector('.slide-content');
+  if(content){content.style.animation='none';requestAnimationFrame(()=>{content.style.animation='';});}
+}
+function slideMove(dir){clearInterval(SLIDE_TIMER);goSlide(SLIDE_IDX+dir);startSlideTimer();}
+function startSlideTimer(){
+  clearInterval(SLIDE_TIMER);
+  SLIDE_TIMER=setInterval(()=>goSlide(SLIDE_IDX+1),5000);
+}
+
+
+const PAGE_TITLES={
+  dashboard:'Home',staff:'Staff Profiles',attendance:'Attendance',
+  leave:'Leave Requests',tasks:'Task & Duty Assignment',emergency:'Emergency Response',
+  training:'Training & Development',comms:'Communication Centre',
+  reports:'Reports & Analytics',settings:'System Settings'
+};
+function nav(id, el, deptFilter){
+  // Hide all pages
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pg=document.getElementById('pg-'+id);
+  if(pg)pg.classList.add('active');
+  // Update title
+  document.getElementById('topbar-title').textContent=PAGE_TITLES[id]||id;
+  // Update sidebar active
+  if(el){
+    document.querySelectorAll('.sb-nav a').forEach(a=>a.classList.remove('active'));
+    el.classList.add('active');
+  } else {
+    // Find and activate matching sidebar link
+    document.querySelectorAll('.sb-nav a').forEach(a=>{
+      if(a.getAttribute('onclick')&&a.getAttribute('onclick').includes("'"+id+"'"))
+        a.classList.add('active');
+      else a.classList.remove('active');
+    });
+  }
+  // Close mobile sidebar
+  if(window.innerWidth<768)document.getElementById('sidebar').classList.remove('open');
+  // If dept filter passed, apply it
+  if(deptFilter&&id==='staff'){
+    const sel=document.getElementById('staff-dept');
+    if(sel){sel.value=deptFilter;filterStaff();}
+  }
+  // Lazy init charts per page
+  requestAnimationFrame(()=>{
+    if(id==='dashboard')initSlider();
+    if(id==='training')initTrainingChart();
+    if(id==='reports')initReportCharts();
+  });
+}
+
+// ── MOBILE SIDEBAR ──
+function toggleSB(){document.getElementById('sidebar').classList.toggle('open');}
+
+// ── LIVE CLOCK ──
+function startClock(){
+  function tick(){
+    const el=document.getElementById('live-clock');
+    if(el)el.textContent=new Date().toLocaleTimeString('en-GB');
+  }
+  tick();setInterval(tick,1000);
+}
+
+// ── MINI CALENDAR ──
+function buildMiniCal(){
+  const el=document.getElementById('mini-cal');
+  if(!el)return;
+  const days=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const firstDay=new Date(2026,2,1).getDay();
+  const events=[3,8,12,15,20,25];
+  let h=`<div class="mcal"><div class="mcal-hd"><strong>March 2026</strong><div><button>&#8249;</button><button>&#8250;</button></div></div><div class="mcal-grid">`;
+  days.forEach(d=>h+=`<div class="dl">${d}</div>`);
+  for(let i=0;i<firstDay;i++)h+=`<div></div>`;
+  for(let i=1;i<=31;i++){
+    let cls=i===12?'day today':'day';
+    if(events.includes(i))cls+=' ev';
+    h+=`<div class="${cls}">${i}</div>`;
+  }
+  h+=`</div></div>`;
+  el.innerHTML=h;
+}
+
+// ── STAFF GRID ──
+function updateRankOptions(gender){
+  const rankSelect = document.getElementById('staff-rank-input');
+  if(!rankSelect)return;
+  rankSelect.innerHTML = '<option value="" disabled selected>Select rank</option>';
+  if(!gender){
+    rankSelect.innerHTML = '<option value="" disabled selected>Please select gender first</option>';
+    return;
+  }
+  const ranks = gender === 'Male' ? [
+    'CFO', 'DCFO', 'ACFO II', 'ACFO I', 'DOI', 'DOII', 'DOIII', 'ADO I', 'ADO II', 'STNO I/GO I', 'STNO II/GO II', 'ASTNO/DGO', 'SUB O/AGO', 'LFM', 'SNR FM', 'FM'
+  ] : gender === 'Female' ? [
+    'CFO', 'DCFO', 'ACFO II', 'ACFO I', 'DOI', 'DOII', 'DOIII', 'ADO I', 'ADO II', 'STNO I/GO I', 'STNO II/GO II', 'ASTNO/DGO', 'SUB O/AGO', 'LFW', 'SNR FW', 'FW'
+  ] : [];
+  ranks.forEach(rank => {
+    const option = document.createElement('option');
+    option.value = rank;
+    option.textContent = rank;
+    rankSelect.appendChild(option);
+  });
+}
+function updateStations(region){
+  const stationSelect = document.getElementById('staff-station');
+  stationSelect.innerHTML = '<option value="" disabled selected>Select station</option>';
+  if(!region) return;
+  const stations = {
+    'GREATER ACCRA REGION': ['Accra City (Makola)', 'Industrial Area', 'Madina', 'Legon', 'Trade Fair (La)', 'Dansoman', 'Amasaman', 'Adjen Kotoku', 'Weija', 'Flagstaff House', 'Osu Castle', 'Korle-Bu', 'Nungua (LEKMA)', 'Adentan', 'Abelemkpe', 'Fire Academy (James Town)'],
+    'CENTRAL REGION': ['Cape Coast Metro (HQ)', 'Winneba', 'Dunkwa-on-Offin', 'Elmina', 'Mankessim', 'Twifo Praso', 'Apam', 'Assin Fosu', 'Agona Swedru', 'Breman Asikuma', 'Komenda', 'UCC Fire Station'],
+    'ASHANTI REGION': ['Kumasi (Regional HQ)', 'KMA City Fire Station', 'Manhyia', 'Konfo Anokye Hospital', 'Obuasi', 'Bekwai', 'Mampong'],
+    'EASTERN REGION': ['Koforidua (Regional HQ)', 'Akosombo', 'Nkawkaw', 'Oda'],
+    'VOLTA REGION': ['Ho (Regional HQ)', 'Hohoe', 'Kpando', 'Akatsi', 'Denu (Aflao)', 'Sogakope', 'Jasikan', 'Keta/Ketu areas', 'Nkwanta', 'Kadjebi', 'Dambai', 'Kete Krachi'],
+    'NORTHERN REGION': ['Tamale (Regional HQ)', 'Tamale Metro', 'Yendi', 'Savelugu', 'Salaga', 'Bimbilla', 'Walewale', 'Damongo', 'Bole', 'Sawla'],
+    'BONO / BONO EAST / AHAFO': ['Sunyani (HQ)', 'Berekum', 'Wenchi', 'Techiman', 'Dormaa Ahenkro', 'Kintampo', 'Nkoranza', 'Atebubu', 'Goaso', 'Sampa', 'Yeji'],
+    'WESTERN REGION': ['Sekondi-Takoradi (HQ)', 'Takoradi', 'Tarkwa', 'Axim', 'Half Assini'],
+    'UPPER REGIONS': ['Bolgatanga', 'Wa', 'Navrongo'],
+    'OTHER REGIONS': ['Oti', 'North East', 'Savannah', 'Western North']
+  };
+  const stationList = stations[region] || [];
+  stationList.forEach(station => {
+    const option = document.createElement('option');
+    option.value = station;
+    option.textContent = station;
+    stationSelect.appendChild(option);
+  });
+}
+function buildStaffGrid(data){
+  const el=document.getElementById('staff-grid');
+  if(!el)return;
+  el.innerHTML=data.map(s=>{
+    const init=s.n.split(' ').map(w=>w[0]).join('').slice(0,2);
+    const sc=s.status==='On Duty'?'bg-green':s.status==='On Leave'?'bg-amber':'bg-gray';
+    return `<div class="scard">
+      <div class="sav" style="background:${s.col}">${init}</div>
+      <div class="sname">${s.n}</div>
+      <div class="srank">${s.rank}</div>
+      <div class="sdept">${s.dept} · ${s.sn}</div>
+      <span class="bp ${sc}" style="margin-top:.4rem">${s.status}</span>
+      <div class="sbtns">
+        <button class="btn btn-outline btn-sm" onclick="openStaffModal('${s.id}')"><i class="fa fa-eye"></i> View</button>
+        <button class="btn-ghost btn-sm" title="Edit" onclick="openStaffModal('${s.id}')"><i class="fa fa-edit"></i></button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function filterStaff(){
+  const q=(document.getElementById('staff-search').value||'').toLowerCase();
+  const dept=document.getElementById('staff-dept').value;
+  const rank=document.getElementById('staff-rank').value;
+  const status=document.getElementById('staff-status').value;
+  const filtered=STAFF.filter(s=>{
+    return (!q||(s.n.toLowerCase().includes(q)||s.sn.toLowerCase().includes(q)))
+      &&(!dept||s.dept===dept)
+      &&(!rank||s.rank===rank)
+      &&(!status||s.status===status);
+  });
+  buildStaffGrid(filtered);
+}
+
+function updateDashboardStats(){
+  const el=document.getElementById('stat-total-staff');
+  if(el)el.textContent=String(STAFF.length);
+}
+
+function openStaffModal(staffId){
+  editingStaffId=null;
+  const modal=document.getElementById('m-addstaff');
+  const title=modal.querySelector('.mhd h3');
+  const fields={
+    name:document.getElementById('staff-name'),
+    sn:document.getElementById('staff-sn'),
+    dob:document.getElementById('staff-dob'),
+    home:document.getElementById('staff-home'),
+    pob:document.getElementById('staff-pob'),
+    gender:document.getElementById('staff-gender'),
+    rank:document.getElementById('staff-rank-input'),
+    dept:document.getElementById('staff-dept-input'),
+    region:document.getElementById('staff-region'),
+    station:document.getElementById('staff-station'),
+    appointment:document.getElementById('staff-appointment'),
+    phone:document.getElementById('staff-phone'),
+    email:document.getElementById('staff-email'),
+    emergName:document.getElementById('staff-emerg-name'),
+    emergPhone:document.getElementById('staff-emerg-phone'),
+  };
+  const clearForm=()=>Object.values(fields).forEach(f=>{if(f)f.value='';});
+  if(staffId){
+    const staff=STAFF.find(s=>s.id===staffId);
+    if(!staff)return;
+    editingStaffId=staffId;
+    title.innerHTML='<i class="fa fa-user-plus" style="color:var(--red)"></i> Edit Staff Member';
+    fields.name.value=staff.n||'';
+    fields.sn.value=staff.sn||'';
+    fields.dob.value=staff.dob||'';
+    fields.home.value=staff.home||'';
+    fields.pob.value=staff.pob||'';
+    fields.gender.value=staff.gender||'';
+    fields.rank.value=staff.rank||'';
+    fields.dept.value=staff.dept||'';
+    fields.region.value=staff.region||'';
+    fields.station.value=staff.station||'';
+    fields.appointment.value=staff.appointment||'';
+    fields.phone.value=staff.phone||'';
+    fields.email.value=staff.email||'';
+    fields.emergName.value=staff.emergName||'';
+    fields.emergPhone.value=staff.emergPhone||'';
+  } else {
+    title.innerHTML='<i class="fa fa-user-plus" style="color:var(--red)"></i> Add New Staff Member';
+    clearForm();
+  }
+  updateRankOptions(fields.gender.value);
+  updateStations(fields.region.value);
+  openM('m-addstaff');
+  setTimeout(()=>fields.name.focus(),100);
+}
+
+function saveStaff(){
+  const name=document.getElementById('staff-name').value.trim();
+  const sn=document.getElementById('staff-sn').value.trim();
+  const rank=document.getElementById('staff-rank-input').value;
+  const dept=document.getElementById('staff-dept-input').value;
+  const invalidRank=!rank||rank.toLowerCase().includes('select');
+  const invalidDept=!dept||dept.toLowerCase().includes('select');
+  if(!name||invalidRank||invalidDept){
+    toast('Name, rank and department are required','e');
+    return;
+  }
+  if(!sn){
+    toast('Please provide a service number','e');
+    return;
+  }
+  const existing = STAFF.find(s=>s.sn===sn && s.id!==editingStaffId);
+  if(existing){
+    toast('Service number already exists','e');
+    return;
+  }
+  const color=STAFF.length?STAFF[STAFF.length-1].col:'#B30000';
+  const staffObj={
+    id:editingStaffId||sn,
+    n:name,
+    sn:sn,
+    rank:rank,
+    dept:dept,
+    region:fields.region.value,
+    status:'On Duty',
+    col:color,
+    dob:document.getElementById('staff-dob').value,
+    home:document.getElementById('staff-home').value.trim(),
+    pob:document.getElementById('staff-pob').value.trim(),
+    station:document.getElementById('staff-station').value,
+    appointment:document.getElementById('staff-appointment').value,
+    phone:document.getElementById('staff-phone').value.trim(),
+    email:document.getElementById('staff-email').value.trim(),
+    emergName:document.getElementById('staff-emerg-name').value.trim(),
+    emergPhone:document.getElementById('staff-emerg-phone').value.trim(),
+  };
+  if(editingStaffId){
+    const idx=STAFF.findIndex(s=>s.id===editingStaffId);
+    if(idx>-1)STAFF[idx]=Object.assign({},STAFF[idx],staffObj);
+    toast('Staff profile updated','s');
+  } else {
+    STAFF.unshift(staffObj);
+    toast('Staff profile saved successfully','s');
+  }
+  saveToStorage('staff',STAFF);
+  buildStaffGrid(STAFF);
+  updateDashboardStats();
+  buildAttTable();
+  closeM('m-addstaff');
+}
+
+// ── ATTENDANCE TABLE ──
+function buildAttTable(){
+  const el=document.getElementById('att-table');
+  if(!el)return;
+  const rows=STAFF.map(s=>{
+    const init=s.n.split(' ').map(w=>w[0]).join('').slice(0,2);
+    const sc=s.status==='On Duty'?'bg-green':s.status==='On Leave'?'bg-amber':'bg-gray';
+    const cin=s.status==='On Duty'?'07:45':'—';
+    const cout=s.status==='Off Duty'?'16:30':'—';
+    return `<tr>
+      <td><div class="tdn"><div class="av" style="background:${s.col}">${init}</div><div><strong>${s.n}</strong><span>${s.sn}</span></div></div></td>
+      <td>${s.rank}</td><td>${s.dept}</td><td>${cin}</td><td>${cout}</td>
+      <td><span class="bp ${sc}">${s.status}</span></td>
+    </tr>`;
+  });
+  el.innerHTML=`<thead><tr><th>Officer</th><th>Rank</th><th>Department</th><th>Clock In</th><th>Clock Out</th><th>Status</th></tr></thead><tbody>${rows.join('')}</tbody>`;
+}
+
+// ── LEAVE TABLE ──
+const LEAVE_DATA=[
+  {n:'Esi Owusu',sn:'GNFS-002',type:'Annual Leave',from:'Mar 14',to:'Mar 21',days:6,status:'Pending',col:'#0A1F44'},
+  {n:'James Mensah',sn:'GNFS-003',type:'Sick Leave',from:'Mar 10',to:'Mar 14',days:5,status:'Approved',col:'#00875a'},
+  {n:'Samuel Adu',sn:'GNFS-007',type:'Study Leave',from:'Mar 20',to:'Apr 3',days:14,status:'Pending',col:'#0A1F44'},
+  {n:'Akua Darko',sn:'GNFS-006',type:'Annual Leave',from:'Apr 1',to:'Apr 5',days:5,status:'Pending',col:'#B30000'},
+  {n:'Grace Asare',sn:'GNFS-008',type:'Annual Leave',from:'Mar 28',to:'Apr 4',days:8,status:'Approved',col:'#00875a'},
+  {n:'Yaw Boateng',sn:'GNFS-009',type:'Compassionate Leave',from:'Mar 13',to:'Mar 15',days:3,status:'Approved',col:'#7c3aed'},
+];
+function buildLeaveTable(){
+  const el=document.getElementById('leave-table');
+  if(!el)return;
+  const rows=LEAVE_DATA.map((l,i)=>{
+    const init=l.n.split(' ').map(w=>w[0]).join('').slice(0,2);
+    const sc=l.status==='Approved'?'bg-green':l.status==='Rejected'?'bg-red':'bg-amber';
+    const acts=l.status==='Pending'
+      ?`<button class="btn btn-sm" style="background:var(--green-lt);color:var(--green);border:none;border-radius:6px;padding:.28rem .6rem;font-size:.7rem;font-weight:600;cursor:pointer;margin-right:.3rem" onclick="approveLeave(this,${i})"><i class="fa fa-check"></i> Approve</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red);border:none;border-radius:6px;padding:.28rem .6rem;font-size:.7rem;font-weight:600;cursor:pointer" onclick="rejectLeave(this,${i})"><i class="fa fa-times"></i> Reject</button>`
+      :'—';
+    return `<tr>
+      <td><div class="tdn"><div class="av" style="background:${l.col}">${init}</div><div><strong>${l.n}</strong><span>${l.sn}</span></div></div></td>
+      <td><span class="bp bg-navy">${l.type}</span></td>
+      <td>${l.from}</td><td>${l.to}</td><td>${l.days} days</td>
+      <td><span class="bp ${sc}" id="leave-status-${i}">${l.status}</span></td>
+      <td id="leave-acts-${i}">${acts}</td>
+    </tr>`;
+  });
+  el.innerHTML=`<thead><tr><th>Officer</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Action</th></tr></thead><tbody>${rows.join('')}</tbody>`;
+}
+function approveLeave(btn,i){
+  document.getElementById('leave-status-'+i).className='bp bg-green';
+  document.getElementById('leave-status-'+i).textContent='Approved';
+  document.getElementById('leave-acts-'+i).textContent='—';
+  toast('Leave approved','s');
+}
+function rejectLeave(btn,i){
+  document.getElementById('leave-status-'+i).className='bp bg-red';
+  document.getElementById('leave-status-'+i).textContent='Rejected';
+  document.getElementById('leave-acts-'+i).textContent='—';
+  toast('Leave rejected','w');
+}
+
+// ── KANBAN ──
+function buildKanban(){
+  const el=document.getElementById('kanban-board');
+  if(!el)return;
+  const cols=[
+    {key:'todo',label:'To Do',col:'var(--text-lt)'},
+    {key:'progress',label:'In Progress',col:'var(--blue)'},
+    {key:'done',label:'Completed',col:'var(--green)'},
+    {key:'blocked',label:'Blocked',col:'var(--red)'},
+  ];
+  el.innerHTML=cols.map(col=>{
+    const cards=(KANBAN[col.key]||[]).map(c=>`
+      <div class="kcard">
+        <div class="kcard-title">${c.t}</div>
+        <div class="kcard-due"><i class="fa fa-calendar-alt" style="margin-right:.3rem"></i>${c.d}</div>
+        <div class="kcard-foot">
+          <span class="ktag ${c.p==='high'?'k-hi':c.p==='med'?'k-md':'k-lo'}">${c.p.toUpperCase()}</span>
+          <div class="av" style="background:var(--navy);width:22px;height:22px;font-size:.58rem">${c.a}</div>
+        </div>
+      </div>`).join('');
+    return `<div class="kcol">
+      <div class="kcol-hd"><h4 style="color:${col.col}">${col.label}</h4><div class="kcnt">${(KANBAN[col.key]||[]).length}</div></div>
+      ${cards}
+      <button style="width:100%;background:none;border:1.5px dashed var(--gray-md);border-radius:8px;padding:.45rem;font-size:.76rem;color:var(--text-lt);cursor:pointer;margin-top:.3rem;font-family:var(--sans)" onclick="openM('m-task')"><i class="fa fa-plus"></i> Add</button>
+    </div>`;
+  }).join('');
+}
+
+// ── INCIDENTS ──
+function buildIncidents(targetId){
+  const el=document.getElementById(targetId);
+  if(!el)return;
+  el.innerHTML=INCIDENTS.map(i=>{
+    const bc=i.st==='active'?'bg-red':i.st==='contained'?'bg-amber':'bg-green';
+    const label=i.st.charAt(0).toUpperCase()+i.st.slice(1);
+    return `<div class="iitem">
+      <div class="idot ${i.st}"></div>
+      <div class="iinfo"><strong>${i.t}</strong><span><i class="fa fa-map-marker-alt"></i> ${i.loc} · ${i.units}</span></div>
+      <div class="imeta"><span class="bp ${bc}">${label}</span><span>${i.time}</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ── TRAINING LIST ──
+function buildTraining(){
+  const el=document.getElementById('training-list');
+  if(!el)return;
+  const mods=[
+    {ic:'fa-fire',c:'r',t:'Advanced Fire Suppression',sub:'Sr. Officer Tetteh',pct:78},
+    {ic:'fa-skull-crossbones',c:'n',t:'HAZMAT Level 2 Certification',sub:'External Trainer',pct:45},
+    {ic:'fa-heartbeat',c:'g',t:'Emergency First Responder',sub:'Nurse Asante',pct:92},
+    {ic:'fa-truck',c:'n',t:'Heavy Appliance Driving',sub:'Off. Mensah',pct:60},
+    {ic:'fa-mountain',c:'r',t:'Technical Rescue (Heights)',sub:'Dep. Comm. Adu',pct:33},
+    {ic:'fa-shield-alt',c:'g',t:'Fire Service Leadership',sub:'Commissioner',pct:85},
+  ];
+  el.innerHTML=mods.map(m=>`
+    <div class="tcard">
+      <div class="tic ${m.c}"><i class="fa ${m.ic}"></i></div>
+      <div class="tinfo">
+        <strong>${m.t}</strong><span>Instructor: ${m.sub}</span>
+        <div class="pb"><div class="pf ${m.c==='r'?'red':m.c==='n'?'navy':'green'}" style="width:${m.pct}%"></div></div>
+      </div>
+      <div class="tpct">${m.pct}%</div>
+    </div>`).join('');
+}
+
+// ── COMMS ──
+function buildComms(){
+  const a=document.getElementById('comms-ann');
+  const m=document.getElementById('comms-msgs');
+  if(a)a.innerHTML=`
+    <div class="ann"><div class="ann-ic r"><i class="fa fa-exclamation-circle"></i></div><div class="ann-txt"><strong>Fire Safety Drill – March 15</strong><span>All stations on standby. Full gear required.</span></div><span class="ann-time">2h ago</span></div>
+    <div class="ann"><div class="ann-ic n"><i class="fa fa-clipboard"></i></div><div class="ann-txt"><strong>Q1 Performance Reviews Open</strong><span>Supervisors to submit by March 20</span></div><span class="ann-time">1d ago</span></div>
+    <div class="ann"><div class="ann-ic g"><i class="fa fa-graduation-cap"></i></div><div class="ann-txt"><strong>New HAZMAT Module Available</strong><span>Enrol before March 18 deadline</span></div><span class="ann-time">2d ago</span></div>
+    <div class="ann"><div class="ann-ic a"><i class="fa fa-bullhorn"></i></div><div class="ann-txt"><strong>Fuel Rationing in Effect</strong><span>Station commanders to monitor usage</span></div><span class="ann-time">3d ago</span></div>`;
+  if(m)m.innerHTML=`
+    <div class="ann"><div class="av" style="background:var(--navy);flex-shrink:0;width:34px;height:34px;font-size:.72rem">KT</div><div class="ann-txt"><strong>Kwame Tetteh</strong><span>Please confirm availability for the drill on Mar 15.</span></div><span class="ann-time">30m</span></div>
+    <div class="ann"><div class="av" style="background:var(--red);flex-shrink:0;width:34px;height:34px;font-size:.72rem">EO</div><div class="ann-txt"><strong>Esi Owusu</strong><span>Training materials uploaded to repository.</span></div><span class="ann-time">1h</span></div>
+    <div class="ann"><div class="av" style="background:var(--green);flex-shrink:0;width:34px;height:34px;font-size:.72rem">GA</div><div class="ann-txt"><strong>Grace Asare</strong><span>Recruit orientation completed successfully.</span></div><span class="ann-time">2h</span></div>`;
+}
+
+// ── CHARTS ──
+// Dashboard charts
+function initDashCharts(){
+  const ac=document.getElementById('chart-attendance');
+  if(ac&&!CHARTS.attendance){
+    CHARTS.attendance=new Chart(ac,{
+      type:'line',
+      data:{
+        labels:['1 Mar','5 Mar','8 Mar','10 Mar','12 Mar'],
+        datasets:[
+          {label:'Present',data:[108,115,110,118,112],borderColor:'#0A1F44',backgroundColor:'rgba(10,31,68,.06)',tension:.4,fill:true,borderWidth:2,pointBackgroundColor:'#0A1F44',pointRadius:4},
+          {label:'On Leave',data:[12,8,10,7,8],borderColor:'#d97706',backgroundColor:'rgba(217,119,6,.06)',tension:.4,fill:true,borderWidth:2,pointBackgroundColor:'#d97706',pointRadius:4}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{y:{beginAtZero:false,grid:{color:'rgba(0,0,0,.04)'}},x:{grid:{display:false}}}}
+    });
+  }
+  const dc=document.getElementById('chart-dept');
+  if(dc&&!CHARTS.dept){
+    CHARTS.dept=new Chart(dc,{
+      type:'doughnut',
+      data:{
+        labels:['Operations','Training','Administration','Logistics','Special Units'],
+        datasets:[{data:[62,28,19,24,14],backgroundColor:['#B30000','#0A1F44','#d97706','#00875a','#1e6ef5'],borderWidth:0,hoverOffset:8}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}}}
+    });
+  }
+}
+
+// Training chart — on training page
+function initTrainingChart(){
+  const tc=document.getElementById('chart-training');
+  if(tc&&!CHARTS.training){
+    CHARTS.training=new Chart(tc,{
+      type:'bar',
+      data:{
+        labels:['Operations','Training','Admin','Logistics','Special'],
+        datasets:[{label:'Completion %',data:[84,92,76,68,55],backgroundColor:['#B30000','#0A1F44','#d97706','#00875a','#1e6ef5'],borderRadius:5,borderSkipped:false}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,max:100,grid:{color:'rgba(0,0,0,.04)'}},y:{grid:{display:false}}}}
+    });
+  }
+}
+
+// Reports charts — on reports page
+function initReportCharts(){
+  const ic=document.getElementById('chart-incidents');
+  if(ic&&!CHARTS.incidents){
+    CHARTS.incidents=new Chart(ic,{
+      type:'bar',
+      data:{
+        labels:['Jan','Feb','Mar','Apr','May','Jun'],
+        datasets:[
+          {label:'Structure Fire',data:[8,12,9,0,0,0],backgroundColor:'#B30000',borderRadius:4},
+          {label:'Bush Fire',data:[5,3,4,0,0,0],backgroundColor:'#d97706',borderRadius:4},
+          {label:'Rescue',data:[3,4,2,0,0,0],backgroundColor:'#0A1F44',borderRadius:4}
+        ]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{size:11},boxWidth:12}}},scales:{x:{grid:{display:false}},y:{beginAtZero:true,grid:{color:'rgba(0,0,0,.04)'}}}}
+    });
+  }
+  const lc=document.getElementById('chart-leave');
+  if(lc&&!CHARTS.leave){
+    CHARTS.leave=new Chart(lc,{
+      type:'pie',
+      data:{
+        labels:['Annual Leave','Sick Leave','Study Leave','Compassionate'],
+        datasets:[{data:[52,24,16,8],backgroundColor:['#0A1F44','#B30000','#d97706','#00875a'],borderWidth:0}]
+      },
+      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:11},boxWidth:12,padding:10}}}}
+    });
+  }
+}
+
+// ── MODALS ──
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+
+// ── CLOCK / ATTENDANCE ──
+function doClock(type){
+  const t=new Date().toLocaleTimeString('en-GB');
+  document.getElementById('clock-status').textContent=
+    type==='in'?`✅ Clocked IN at ${t}`:`🔴 Clocked OUT at ${t}`;
+  toast(`Clock ${type} recorded at ${t}`,'s');
+}
+
+// ── EMERGENCY ──
+function triggerEmg(){
+  toast('🚨 EMERGENCY ALERT ACTIVATED — All units notified!','e');
+}
+
+// ── LOGOUT ──
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  const lw=document.getElementById('login-wrap');
+  lw.style.cssText='position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;opacity:1;transform:none;background:linear-gradient(135deg,#0A1F44,#1a3a6e)';
+  toast('Logged out securely','s');
+  // Destroy charts so they re-init properly next login
+  Object.values(CHARTS).forEach(c=>{try{c.destroy();}catch(e){}});
+  Object.keys(CHARTS).forEach(k=>delete CHARTS[k]);
+}
+
+// ── TOAST ──
+function toast(msg,type){
+  const el=document.getElementById('toast');
+  const icons={s:'fa-check-circle',e:'fa-exclamation-circle',w:'fa-exclamation-triangle'};
+  el.className=type||'s';
+  el.innerHTML=`<i class="fa ${icons[type||'s']}"></i> ${msg}`;
+  el.classList.add('show');
+  clearTimeout(el._t);
+  el._t=setTimeout(()=>el.classList.remove('show'),3200);
+}
+</script>
+</body>
+</html>
