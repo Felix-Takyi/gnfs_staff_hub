@@ -768,3 +768,4 @@ function toast(msg,type){
   clearTimeout(el._t);
   el._t=setTimeout(()=>el.classList.remove('show'),3200);
 }
+

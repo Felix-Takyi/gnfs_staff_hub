@@ -548,3 +548,183 @@ tr:hover td{background:rgba(10,31,68,.018)}
   .dept-section{padding:1.4rem 1rem 1.8rem}
 }
 @media(max-width:480px){.stats-grid{grid-template-columns:1fr}.sg{grid-template-columns:1fr}.dept-grid{grid-template-columns:1fr}.slide-name{font-size:1.1rem}}
+.home-hero-text {
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  max-width: 760px;
+  margin: 1.1rem auto 1.35rem;
+  padding: 1.35rem 1.45rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: .76rem;
+  border-radius: 18px;
+  background:
+    radial-gradient(circle at 12% 10%, rgba(255, 255, 255, .22), transparent 40%),
+    linear-gradient(140deg, rgba(9, 26, 58, .78), rgba(16, 44, 86, .6));
+  border: 1px solid rgba(255, 255, 255, .24);
+  box-shadow: 0 20px 44px rgba(2, 10, 28, .42), inset 0 1px 0 rgba(255, 255, 255, .18);
+  backdrop-filter: blur(10px) saturate(140%);
+}
+
+.home-hero-text::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255, 255, 255, .16), transparent 32%, transparent 68%, rgba(255, 255, 255, .07));
+  pointer-events: none;
+}
+
+.home-hero-text::after {
+  content: '';
+  position: absolute;
+  right: -28px;
+  top: -28px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(250, 204, 21, .26), transparent 65%);
+  pointer-events: none;
+}
+
+.home-hero-logo {
+  position: relative;
+  z-index: 1;
+  width: 74px;
+  height: 74px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  padding: 5px;
+  border: 2px solid rgba(255, 255, 255, .5);
+  box-shadow: 0 8px 20px rgba(2, 10, 28, .36);
+}
+
+.home-hero-eyebrow {
+  position: relative;
+  z-index: 1;
+  font-size: .66rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #ffebac;
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  background: rgba(255, 215, 0, .14);
+  border: 1px solid rgba(255, 215, 0, .3);
+  border-radius: 999px;
+  padding: .34rem .72rem;
+}
+
+.home-hero-title {
+  position: relative;
+  z-index: 1;
+  font-family: var(--display);
+  font-size: 2.9rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.05;
+  margin: 0;
+  text-shadow: 0 8px 28px rgba(0, 0, 0, .36)
+}
+
+.home-hero-sub {
+  position: relative;
+  z-index: 1;
+  font-size: .96rem;
+  color: rgba(255, 255, 255, .9);
+  margin: 0;
+  max-width: 58ch;
+  line-height: 1.62
+}
+
+.home-hero-btns {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  gap: .8rem;
+  flex-wrap: wrap
+}
+
+.home-btn-primary,
+.home-btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .52rem;
+  min-width: 196px;
+  border-radius: 11px;
+  padding: .74rem 1.22rem;
+  font-family: var(--display);
+  font-size: .83rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: transform .2s, box-shadow .2s, background .2s, border-color .2s, color .2s
+}
+
+.home-btn-primary {
+  background: linear-gradient(135deg, #b30000, #d01313);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, .18);
+  box-shadow: 0 10px 24px rgba(179, 0, 0, .42)
+}
+
+.home-btn-primary:hover {
+  transform: translateY(-2px) scale(1.01);
+  box-shadow: 0 14px 30px rgba(179, 0, 0, .52)
+}
+
+.home-btn-outline {
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  border: 1.5px solid rgba(255, 255, 255, .44);
+  backdrop-filter: blur(4px)
+}
+
+.home-btn-outline:hover {
+  background: rgba(255, 255, 255, .24);
+  border-color: rgba(255, 255, 255, .72);
+  transform: translateY(-2px) scale(1.01)
+}
+
+.home-btn-primary:focus-visible,
+.home-btn-outline:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, .9);
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .home-hero-text {
+    max-width: 100%;
+    margin: .95rem .9rem 1rem;
+    padding: 1rem;
+    border-radius: 14px;
+    gap: .7rem;
+  }
+
+  .home-hero-logo {
+    width: 62px;
+    height: 62px;
+  }
+
+  .home-hero-title {
+    font-size: 2.1rem;
+  }
+
+  .home-hero-sub {
+    font-size: .87rem;
+    max-width: 100%;
+  }
+
+  .home-btn-primary,
+  .home-btn-outline {
+    min-width: 100%;
+  }
+}
