@@ -305,9 +305,9 @@ function updateStations(region){
   const stations = {
     'GREATER ACCRA REGION': ['ABELEMKPE', 'ADENTA', 'ADJENKOTOKU', 'AMASAMAN', 'CASTLE', 'CIRCLE', 'DANSOMAN', 'ELECTORAL COMMISSION', 'FLAGSTAFF HOUSE', 'INDUSTRIAL', 'KORLE-BU', 'LEGON', 'MADINA', 'MAKOLA', 'MINISTRIES', 'NATIONAL HQ SUBSTATION', 'NUNGUA', 'PARLIAMENT', 'TRADE FAIR', 'WEIJA'],
     'TEMA REGION': ['Kasapreko', 'Tema Newtown', 'Metro', 'Tema Industrial Area Fire Station', 'Motorway Fire Station', 'Ashaiman', 'Katamanso', 'Gbestele', 'Devtraco 25', 'Prampram', 'Sege', 'Ada', 'Dodowa'],
-    'CENTRAL REGION': ['Regional Headquarters', 'Sub-Station', 'Metro Fire Station', 'UCC Fire Station', 'Elmina Fire Station', 'Komenda Fire Station', 'Praso Fire Station', 'Dunkwa-On-Offin Fire Station', 'Diaso Fire Station', 'Assin Fosu Fire Station', 'Abura Dunkwa Fire Station', 'Mankessim Fire Station', 'Apam Fire Station', 'Breman Asikuma Fire Station', 'Breman Essiam Fire Station', 'Apam Fire Station', 'Winneba Fire Station', 'Swedru Fire Station', 'Agona Nsaba Fire Station', 'Kasoa Fire Station', 'Pentecost Convention Center Fire Station', 'Buduburam Fire Station', 'Kotokuraba Market Fire Post', 'Swedru Market Post'],
+    'CENTRAL REGION': ['REGIONAL HEADQUARTERS', 'Sub-Station', 'Metro Fire Station', 'UCC Fire Station', 'Elmina Fire Station', 'Komenda Fire Station', 'Praso Fire Station', 'Dunkwa-On-Offin Fire Station', 'Diaso Fire Station', 'Assin Fosu Fire Station', 'Abura Dunkwa Fire Station', 'Mankessim Fire Station', 'Apam Fire Station', 'Breman Asikuma Fire Station', 'Breman Essiam Fire Station', 'Apam Fire Station', 'Winneba Fire Station', 'Swedru Fire Station', 'Agona Nsaba Fire Station', 'Kasoa Fire Station', 'Pentecost Convention Center Fire Station', 'Buduburam Fire Station', 'Kotokuraba Market Fire Post', 'Swedru Market Post'],
     'ASHANTI REGION': ['Kumasi (Regional HQ)', 'KMA City Fire Station', 'Manhyia', 'Konfo Anokye Hospital', 'Obuasi', 'Bekwai', 'Mampong'],
-    'EASTERN REGION': ['REGIONAL HEADQUARTERS', 'MUNICIPAL', 'METRO', 'ABURI', 'ACHIASE', 'ADUAMOA', 'AKIM ODA', 'AKOSOMBO', 'AKROPONG', 'AKROSO', 'AKWATIA', 'ANYINAM', 'ASAMANKESE', 'ASESEWA', 'BEGORO', 'BOSO', 'BUNSO', 'DONKORKROM', 'KADE KIBI', 'KPONG', 'LARTEH', 'MPRAESO', 'NEW ABIREM', 'NKAWKAW', 'NSAWAM', 'OFOASE', 'PEDUASE', 'SOMANYA', 'SUHUM'],
+    'EASTERN REGION': ['REGIONAL HEADQUARTERS', 'MUNICIPAL', 'METRO', 'ABURI', 'ACHIASE', 'ADUAMOA', 'AKIM ODA', 'AKOSOMBO', 'AKROPONG', 'AKROSO', 'AKWATIA', 'ANYINAM', 'ASAMANKESE', 'ASESEWA', 'ASUOM', 'BEGORO', 'BOSO', 'BUNSO', 'DONKORKROM', 'KADE KIBI', 'KPONG', 'LARTEH', 'MPRAESO', 'NEW ABIREM', 'NKAWKAW', 'NSAWAM', 'OFOASE', 'PEDUASE', 'SOMANYA', 'SUHUM'],
     'OTI REGION': ['Nkonya', 'Chinderi', 'Krache', 'Kpasa', 'Jasikan', 'Kadjebi', 'Nkwanta', 'Katanga Fire Post', 'Dambai Fire Station', 'RHQ.'],
     'VOLTA REGION': ['Ho (Regional HQ)', 'Hohoe', 'Kpando', 'Akatsi', 'Denu (Aflao)', 'Sogakope', 'Jasikan', 'Keta/Ketu areas', 'Nkwanta', 'Kadjebi', 'Dambai', 'Kete Krachi'],
     'NORTHERN REGION': ['Tamale (Regional HQ)', 'Tamale Metro', 'Yendi', 'Savelugu', 'Salaga', 'Bimbilla', 'Walewale', 'Damongo', 'Bole', 'Sawla'],
@@ -316,9 +316,15 @@ function updateStations(region){
     'UPPER REGIONS': ['Bolgatanga', 'Wa', 'Navrongo'],
     'OTHER REGIONS': ['Oti', 'North East', 'Savannah', 'Western North']
   };
-  const stationList = (stations[region] || [])
-    .map(station => station.replace(/\bRHQ\.?\b/gi, 'Regional Headquarters'))
+  const normalizedStations = (stations[region] || [])
+    .map(station => station.replace(/\bRHQ\.?\b/gi, 'REGIONAL HEADQUARTERS'))
+    .map(station => /^\s*regional headquarters\s*$/i.test(station) ? 'REGIONAL HEADQUARTERS' : station.trim());
+  const otherStations = normalizedStations
+    .filter(station => station !== 'REGIONAL HEADQUARTERS')
     .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+  const stationList = normalizedStations.includes('REGIONAL HEADQUARTERS')
+    ? ['REGIONAL HEADQUARTERS', ...otherStations]
+    : otherStations;
   stationList.forEach(station => {
     const option = document.createElement('option');
     option.value = station;
@@ -730,11 +736,11 @@ function initReportCharts(){
   }
 }
 
-// â”€â”€ MODALS â”€â”€
+// MODALS
 function openM(id){document.getElementById(id).classList.add('open');}
 function closeM(id){document.getElementById(id).classList.remove('open');}
 
-// â”€â”€ CLOCK / ATTENDANCE â”€â”€
+// CLOCK / ATTENDANCE
 function doClock(type){
   const t=new Date().toLocaleTimeString('en-GB');
   document.getElementById('clock-status').textContent=
@@ -758,7 +764,7 @@ function doLogout(){
   Object.keys(CHARTS).forEach(k=>delete CHARTS[k]);
 }
 
-// â”€â”€ TOAST â”€â”€
+// TOAST
 function toast(msg,type){
   const el=document.getElementById('toast');
   const icons={s:'fa-check-circle',e:'fa-exclamation-circle',w:'fa-exclamation-triangle'};
