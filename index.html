@@ -1,0 +1,764 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GNFS StaffHub â€“ Ghana National Fire Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- â•â•â•â•â•â•â•â•â•â• LOGIN â•â•â•â•â•â•â•â•â•â• -->
+<div id="login-wrap">
+  <div class="login-bg-pattern"></div>
+  <div class="login-card">
+    <div class="login-logo">
+      <!-- Ghana National Fire Service official logo -->
+      <img class="gnfs-crest" src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="Ghana National Fire Service logo" loading="lazy">
+      <div class="login-brand">
+        <h2>GNFS StaffHub</h2>
+        <span>Ghana National Fire Service</span>
+        <span style="font-size:.65rem;color:var(--red);font-weight:600;text-transform:uppercase;letter-spacing:.05em">Staff Management Portal</span>
+      </div>
+    </div>
+    <h3>Welcome Back</h3>
+    <p>Sign in to access the GNFS staff management system.</p>
+    <div class="lf-group">
+      <label>Service Number / Email</label>
+      <input type="text" id="li-user" placeholder="GNFS-ID or email">
+    </div>
+    <div class="lf-group">
+      <label>Password</label>
+      <input type="password" id="li-pass" placeholder="Enter your password">
+    </div>
+    <div class="lf-row">
+      <input type="checkbox" id="li-rem" checked> <label for="li-rem" style="text-transform:none;margin:0;font-size:.78rem;color:var(--text-lt)">Remember me</label>
+      <a href="#">Forgot password?</a>
+    </div>
+    <button class="btn-login" onclick="doLogin()">
+      <i class="fa fa-sign-in-alt"></i> Sign In to StaffHub
+    </button>
+  </div>
+</div>
+
+<!-- â•â•â•â•â•â•â•â•â•â• APP SHELL â•â•â•â•â•â•â•â•â•â• -->
+<div id="app" style="display:none">
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="sb-head">
+    <!-- Ghana National Fire Service official logo -->
+    <img class="sb-crest" src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="Ghana National Fire Service logo" loading="lazy">
+    <!-- GNFS crest in sidebar -->
+    <svg class="sb-crest" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 12 L178 45 L178 110 Q178 165 100 192 Q22 165 22 110 L22 45 Z" fill="#B30000" stroke="#7a0000" stroke-width="3"/>
+      <path d="M100 22 L168 52 L168 110 Q168 158 100 182 Q32 158 32 52 Z" fill="none" stroke="#FFD700" stroke-width="2"/>
+      <path d="M100 28 L162 56 L162 110 Q162 154 100 176 Q38 154 38 110 L38 56 Z" fill="#8B0000"/>
+      <path d="M100 55 C95 65 85 70 88 82 C90 90 96 93 100 100 C104 93 110 90 112 82 C115 70 105 65 100 55Z" fill="#FFD700"/>
+      <path d="M100 65 C97 72 91 75 93 83 C95 89 98 91 100 96 C102 91 105 89 107 83 C109 75 103 72 100 65Z" fill="#FF6600"/>
+      <polygon points="55,42 57,48 63,48 58,52 60,58 55,54 50,58 52,52 47,48 53,48" fill="#FFD700"/>
+      <polygon points="145,42 147,48 153,48 148,52 150,58 145,54 140,58 142,52 137,48 143,48" fill="#FFD700"/>
+    </svg>
+    <div class="sb-brand">
+      <h2>GNFS StaffHub</h2>
+      <span>Fire Service Portal</span>
+    </div>
+  </div>
+
+  <div class="sb-label">Main</div>
+  <ul class="sb-nav">
+    <li><a class="active" onclick="nav('dashboard',this)"><span class="ni"><i class="fa fa-home"></i></span> Home</a></li>
+    <li><a onclick="nav('staff',this)"><span class="ni"><i class="fa fa-users"></i></span> Staff Profiles <span class="nb">147</span></a></li>
+    <li><a onclick="nav('attendance',this)"><span class="ni"><i class="fa fa-calendar-check"></i></span> Attendance</a></li>
+    <li><a onclick="nav('leave',this)"><span class="ni"><i class="fa fa-calendar-times"></i></span> Leave and Permissions <span class="nb">8</span></a></li>
+    <li><a onclick="nav('tasks',this)"><span class="ni"><i class="fa fa-tasks"></i></span> Task & Duty</a></li>
+    <li><a onclick="nav('emergency',this)"><span class="ni"><i class="fa fa-exclamation-triangle"></i></span> Emergency Response</a></li>
+    <li><a onclick="nav('training',this)"><span class="ni"><i class="fa fa-graduation-cap"></i></span> Training & Dev</a></li>
+    <li><a onclick="nav('comms',this)"><span class="ni"><i class="fa fa-comments"></i></span> Communication <span class="nb">3</span></a></li>
+    <li><a onclick="nav('reports',this)"><span class="ni"><i class="fa fa-chart-bar"></i></span> Reports & Analytics</a></li>
+  </ul>
+
+  <div class="sb-label">System</div>
+  <ul class="sb-nav">
+    <li><a onclick="nav('settings',this)"><span class="ni"><i class="fa fa-cog"></i></span> Settings</a></li>
+  </ul>
+
+  <div class="sb-emg">
+    <span>ðŸš¨ Emergency Alert System</span>
+    <button onclick="triggerEmg()"><i class="fa fa-bell"></i> ACTIVATE ALERT</button>
+  </div>
+
+  <div class="sb-user">
+    <div class="sb-av" id="user-initials">AC</div>
+    <div class="sb-info">
+      <strong id="user-name">Administrator</strong>
+      <span>Administrator</span>
+    </div>
+    <button class="sb-out" onclick="doLogout()" title="Logout"><i class="fa fa-sign-out-alt"></i></button>
+  </div>
+</aside>
+
+<!-- TOPBAR -->
+<header id="topbar">
+  <div class="topbar-left">
+    <button class="hamburger" onclick="toggleSB()"><i class="fa fa-bars"></i></button>
+    <span class="topbar-title" id="topbar-title">Home</span>
+  </div>
+  <div class="topbar-search">
+    <i class="fa fa-search"></i>
+    <input type="text" placeholder="Search staff, incidents, tasks...">
+  </div>
+  <div class="topbar-actions">
+    <button class="top-btn" onclick="toast('No new messages','s')" title="Messages"><i class="fa fa-envelope"></i></button>
+    <button class="top-btn" title="Notifications"><i class="fa fa-bell"></i><span class="dot"></span></button>
+    <button class="top-emg" onclick="triggerEmg()"><i class="fa fa-exclamation-triangle"></i> <span>EMERGENCY</span></button>
+    <div class="top-profile">
+      <div class="top-pav" id="topbar-initials">AC</div>
+      <span class="top-pname" id="topbar-name">Administrator</span>
+    </div>
+  </div>
+</header>
+
+<!-- â•â•â•â•â•â•â•â•â•â• PAGES â•â•â•â•â•â•â•â•â•â• -->
+<main id="main">
+
+<!-- HOME / WELCOME -->
+<div class="page active" id="pg-dashboard">
+
+  <!-- OFFICER SLIDESHOW -->
+  <div class="hero-slider">
+    <div class="slide active" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/1.-Daniella-Mawusi-Ntow-Sapong.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Chief Fire Officer</span>
+        <h2 class="slide-name">CFO Daniella M. Ntow Sarpong</h2>
+        <p class="slide-dept">Chief Fire Officer â€” Ghana National Fire Service</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/ROBERTA.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Roberta Aggrey-Ghanson</h2>
+        <p class="slide-dept">Director, Operations</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/HEROINE.jpg')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Heroine Boakye</h2>
+        <p class="slide-dept">Director, Logistics</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/MARK.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Mark Brako-Appiah Jnr</h2>
+        <p class="slide-dept">Director, Finance</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/JENNIFER.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Jennifer N.Y. Quaye</h2>
+        <p class="slide-dept">Director, Policy, Planning, Monitoring & Evaluation</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/Doris.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Doris Lamptey</h2>
+        <p class="slide-dept">Director, Welfare</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/James.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO James O.Y. Kwarteng</h2>
+        <p class="slide-dept">Director, Legal</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/LILLY.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Lilly Ashong Robertson</h2>
+        <p class="slide-dept">Director, Fire Safety</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/GIWAH.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO Henry F. Giwah</h2>
+        <p class="slide-dept">Director, Research & Information Technology</p>
+      </div>
+    </div>
+    <div class="slide" style="background-image:url('https://gnfs.gov.gh/wp-content/uploads/2025/11/John.png')">
+      <div class="slide-overlay"></div>
+      <div class="slide-content">
+        <span class="slide-rank">Deputy Chief Fire Officer</span>
+        <h2 class="slide-name">DCFO John A. Amartey</h2>
+        <p class="slide-dept">Director, Investigations</p>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <button class="slide-prev" onclick="slideMove(-1)"><i class="fa fa-chevron-left"></i></button>
+    <button class="slide-next" onclick="slideMove(1)"><i class="fa fa-chevron-right"></i></button>
+    <div class="slide-dots" id="slide-dots"></div>
+
+    <!-- Badge top-right -->
+    <div class="slide-badge">
+      <img src="https://upload.wikimedia.org/wikipedia/en/9/9a/Ghana_National_Fire_Service_%28GNFS%29_logo.jpg" alt="GNFS" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.4)">
+      <div>
+        <strong>GNFS StaffHub</strong>
+        <span>Accra Regional Command</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREFIGHTING MATERIALS SLIDESHOW -->
+  <div class="materials-wrap">
+    <div class="materials-slider">
+      <div class="mat-slide active" style="background:radial-gradient(circle at top left,rgba(255,255,255,.14),transparent 28%),linear-gradient(135deg,#7f1d1d,#b91c1c 48%,#111827)">
+        <div class="mat-overlay"></div>
+        <div class="mat-content">
+          <span class="mat-kicker">Firefighting Materials</span>
+          <h3 class="mat-title">Fire Engine & Water Tender</h3>
+          <p class="mat-sub">Primary response appliance for rapid deployment, water delivery, and hose operations.</p>
+        </div>
+      </div>
+      <div class="mat-slide" style="background:radial-gradient(circle at top right,rgba(255,255,255,.12),transparent 26%),linear-gradient(135deg,#0f172a,#1e3a8a 52%,#0f766e)">
+        <div class="mat-overlay"></div>
+        <div class="mat-content">
+          <span class="mat-kicker">Firefighting Materials</span>
+          <h3 class="mat-title">Breathing Apparatus (SCBA)</h3>
+          <p class="mat-sub">Critical respiratory protection for smoke-filled environments and hazardous atmospheres.</p>
+        </div>
+      </div>
+      <div class="mat-slide" style="background:radial-gradient(circle at center,rgba(255,255,255,.12),transparent 24%),linear-gradient(135deg,#7c2d12,#ea580c 45%,#1f2937)">
+        <div class="mat-overlay"></div>
+        <div class="mat-content">
+          <span class="mat-kicker">Firefighting Materials</span>
+          <h3 class="mat-title">Fire Hose, Nozzles & Couplings</h3>
+          <p class="mat-sub">Essential suppression line components for controlled water flow and pressure handling.</p>
+        </div>
+      </div>
+      <div class="mat-slide" style="background:radial-gradient(circle at bottom left,rgba(255,255,255,.12),transparent 28%),linear-gradient(135deg,#991b1b,#dc2626 42%,#1f2937)">
+        <div class="mat-overlay"></div>
+        <div class="mat-content">
+          <span class="mat-kicker">Firefighting Materials</span>
+          <h3 class="mat-title">Portable Extinguishers</h3>
+          <p class="mat-sub">Foam, COâ‚‚, and dry powder extinguishers for first-attack response and compartment fires.</p>
+        </div>
+      </div>
+      <div class="mat-slide" style="background:radial-gradient(circle at top,rgba(255,255,255,.14),transparent 25%),linear-gradient(135deg,#111827,#334155 50%,#7c3aed)">
+        <div class="mat-overlay"></div>
+        <div class="mat-content">
+          <span class="mat-kicker">Firefighting Materials</span>
+          <h3 class="mat-title">Protective Gear (PPE)</h3>
+          <p class="mat-sub">Helmet, bunker suit, gloves, and boots designed for thermal and impact protection.</p>
+        </div>
+      </div>
+
+      <button class="mat-prev" onclick="matSlideMove(-1)"><i class="fa fa-chevron-left"></i></button>
+      <button class="mat-next" onclick="matSlideMove(1)"><i class="fa fa-chevron-right"></i></button>
+      <div class="mat-dots" id="mat-dots"></div>
+    </div>
+  </div>
+
+
+</div>
+
+<!-- STAFF -->
+<div class="page" id="pg-staff">
+  <div class="ph">
+    <div class="ph-l"><h1>Staff Profiles</h1><p>147 personnel across all departments and stations</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm"><i class="fa fa-upload"></i> Import CSV</button>
+      <button class="btn btn-primary btn-sm" onclick="openStaffModal()"><i class="fa fa-user-plus"></i> Add Staff</button>
+    </div>
+  </div>
+  <div class="fbar">
+    <input type="text" placeholder="Search by name or service number..." id="staff-search" oninput="filterStaff()">
+    <select id="staff-dept" onchange="filterStaff()"><option value="">All Departments</option><optgroup label="OPERATIONS"><option>Incidence Response</option></optgroup><optgroup label="ADMINISTRATION"><option>Chief Fire Officerâ€™s Secretariat</option><option>Record & Statistics</option><option>Public Relations</option></optgroup><optgroup label="WELFARE"><option>Music</option><option>Guidance & Counseling</option><option>Religious Affairs</option><option>Messes/Canteens</option><option>Schemes/Associations</option></optgroup><optgroup label="FINANCE"><option>Accounts</option><option>Budget</option></optgroup><optgroup label="SPECIAL DUTIES"><option>Incident Investigation</option><option>Intelligence</option></optgroup><optgroup label="HUMAN RESOURCE, DEVELOPMENT & TRAINING"><option>Training</option><option>Human Resource Management</option><option>Sports and Recreation</option></optgroup><optgroup label="LOGISTICS"><option>Supply Chain Management</option><option>Estate</option><option>Project Office</option></optgroup><optgroup label="TECHNICAL SERVICES"><option>Maintenance</option><option>Transport</option></optgroup><optgroup label="POLICY, PLANNING, MONITORING & EVALUATION"><option>Policy Planning</option><option>Monitoring and Evaluation</option></optgroup><optgroup label="FIRE SAFETY"><option>Occupational Health and Safety</option><option>Public Education</option><option>Certification</option><option>Enforcement</option></optgroup><optgroup label="RURAL FIRES"><option>Bush fire Prevention and Suppression</option><option>Ecology Preservation</option></optgroup><optgroup label="LEGAL"><option>Legal</option></optgroup><optgroup label="HEALTH"><option>Health</option></optgroup><optgroup label="RESEARCH AND INFORMATION TECHNOLOGY"><option>Research</option><option>Information Communication Technology</option></optgroup><optgroup label="INTERNAL AUDIT"><option>Internal Audit</option></optgroup></select>
+    <select id="staff-rank" onchange="filterStaff()"><option value="">All Ranks</option><option>CFO</option><option>DCFO</option><option>ACFO I</option><option>ACFO II</option><option>DO I</option><option>DO II</option><option>DO III</option><option>ADO I</option><option>ADO II</option><option>STNO I</option><option>STNO II</option><option>ASTNO</option><option>SUB O</option><option>GO I</option><option>GO II</option><option>DGO</option><option>AGO</option><option>LFM</option><option>SNR FM</option><option>FM</option><option>LFW</option><option>SNR FW</option><option>FW</option></select>
+    <select id="staff-status" onchange="filterStaff()"><option value="">All Status</option><option>On Duty</option><option>On Leave</option><option>Off Duty</option></select>
+    <div style="margin-left:auto;display:flex;gap:.4rem">
+      <button id="btn-view-list" class="btn btn-outline btn-sm" onclick="setStaffView('list')"><i class="fa fa-list"></i> List</button>
+      <button id="btn-view-grid" class="btn btn-navy btn-sm" onclick="setStaffView('grid')"><i class="fa fa-th"></i> Grid</button>
+    </div>
+  </div>
+  <div class="sg" id="staff-grid"></div>
+</div>
+
+<!-- ATTENDANCE -->
+<div class="page" id="pg-attendance">
+  <div class="ph">
+    <div class="ph-l"><h1>Attendance Management</h1><p>Today: Thursday, 12 March 2026</p></div>
+    <div class="ph-r"><button class="btn btn-outline btn-sm" onclick="toast('Attendance report exported','s')"><i class="fa fa-file-export"></i> Export Report</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-clock" style="color:var(--navy)"></i> Clock In / Out</h3></div>
+      <div class="cb">
+        <div class="clock-wrap">
+          <div class="clock-time" id="live-clock">--:--:--</div>
+          <div class="clock-date">Thursday, 12 March 2026</div>
+          <div class="clock-btns">
+            <button class="btn btn-primary" onclick="doClock('in')"><i class="fa fa-sign-in-alt"></i> Clock In</button>
+            <button class="btn btn-outline" onclick="doClock('out')"><i class="fa fa-sign-out-alt"></i> Clock Out</button>
+          </div>
+          <p class="clock-status" id="clock-status">You are not clocked in today.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-calendar" style="color:var(--navy)"></i> March 2026</h3></div>
+      <div class="cb" id="mini-cal"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch">
+      <h3><i class="fa fa-list" style="color:var(--navy)"></i> Today's Attendance Log</h3>
+      <div style="display:flex;gap:.45rem">
+        <span class="bp bg-green">Present: 112</span>
+        <span class="bp bg-amber">Late: 8</span>
+        <span class="bp bg-red">Absent: 27</span>
+      </div>
+    </div>
+    <div class="tw"><table id="att-table"></table></div>
+  </div>
+</div>
+
+<!-- LEAVE -->
+<div class="page" id="pg-leave">
+  <div class="ph">
+    <div class="ph-l"><h1>Leave and Permissions</h1><p>8 pending approvals from supervisors</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-leave')"><i class="fa fa-plus"></i> Request Leave / Permission</button></div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc c-green"><div class="sc-icon"><i class="fa fa-check-circle"></i></div><div class="sc-num">24</div><div class="sc-label">Approved</div></div>
+    <div class="sc c-amber"><div class="sc-icon"><i class="fa fa-hourglass-half"></i></div><div class="sc-num">8</div><div class="sc-label">Pending</div></div>
+    <div class="sc c-red"><div class="sc-icon"><i class="fa fa-times-circle"></i></div><div class="sc-num">3</div><div class="sc-label">Rejected</div></div>
+    <div class="sc c-navy"><div class="sc-icon"><i class="fa fa-calendar-alt"></i></div><div class="sc-num">15</div><div class="sc-label">Days Balance</div></div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-list" style="color:var(--navy)"></i> All Leave and Permission Requests</h3>
+      <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.35rem .65rem;font-size:.78rem;background:#fff;outline:none"><option>All Types</option><option>Annual Leave</option><option>Sick Leave</option><option>Study Leave</option><option>Compassionate Leave</option><option>Proponentative Leave</option><option>Casual Leave</option><option>Maternity Leave</option><option>Permission</option></select>
+    </div>
+    <div class="tw"><table id="leave-table"></table></div>
+  </div>
+</div>
+
+<!-- TASKS -->
+<div class="page" id="pg-tasks">
+  <div class="ph">
+    <div class="ph-l"><h1>Task & Duty Assignment</h1><p>Kanban-style operational task board</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-task')"><i class="fa fa-plus"></i> Create Task</button></div>
+  </div>
+  <div class="kanban" id="kanban-board"></div>
+</div>
+
+<!-- EMERGENCY -->
+<div class="page" id="pg-emergency">
+  <div class="ph">
+    <div class="ph-l"><h1>Emergency Response</h1><p>Real-time incident command and resource management</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm" onclick="toast('Map view requires Google Maps API key','w')"><i class="fa fa-map"></i> Map View</button>
+      <button class="btn btn-primary btn-sm" onclick="openM('m-incident')"><i class="fa fa-plus"></i> Report Incident</button>
+    </div>
+  </div>
+  <div class="stats-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="sc c-red"><div class="sc-icon"><i class="fa fa-fire"></i></div><div class="sc-num">3</div><div class="sc-label">Active Incidents</div></div>
+    <div class="sc c-navy"><div class="sc-icon"><i class="fa fa-truck"></i></div><div class="sc-num">7</div><div class="sc-label">Units Deployed</div></div>
+    <div class="sc c-amber"><div class="sc-icon"><i class="fa fa-user-shield"></i></div><div class="sc-num">34</div><div class="sc-label">Personnel Responding</div></div>
+    <div class="sc c-green"><div class="sc-icon"><i class="fa fa-check"></i></div><div class="sc-num">12</div><div class="sc-label">Resolved Today</div></div>
+  </div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-fire" style="color:var(--red)"></i> Incident Log</h3><span class="bp bg-red">3 Active</span></div>
+        <div style="padding:1rem" id="emg-incidents"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-map-marked-alt" style="color:var(--red)"></i> Incident Map</h3></div>
+        <div class="cb">
+          <div style="background:var(--navy-dim);border-radius:9px;height:260px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:.9rem;border:2px dashed var(--gray-md)">
+            <i class="fa fa-map" style="font-size:2.2rem;color:var(--gray-md)"></i>
+            <span style="font-size:.82rem;color:var(--text-lt);text-align:center">Interactive map<br>(Google Maps API)</span>
+            <button class="btn btn-outline btn-sm" onclick="toast('Configure Google Maps API key in settings','w')"><i class="fa fa-key"></i> Configure API Key</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-truck" style="color:var(--navy)"></i> Resource Allocation</h3></div>
+        <div style="padding:.4rem 1.3rem">
+          <div class="ar"><div class="av" style="background:var(--red)">E3</div><div><span class="ar-name">Engine 03</span><span class="ar-sub">Accra Mall Structure Fire</span></div><span class="bp bg-red">Deployed</span></div>
+          <div class="ar"><div class="av" style="background:var(--red)">E7</div><div><span class="ar-name">Engine 07</span><span class="ar-sub">Accra Mall Structure Fire</span></div><span class="bp bg-red">Deployed</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">T1</div><div><span class="ar-name">Tanker 01</span><span class="ar-sub">Returning from Achimota</span></div><span class="bp bg-amber">Returning</span></div>
+          <div class="ar"><div class="av" style="background:var(--green)">HZ</div><div><span class="ar-name">HazMat Unit</span><span class="ar-sub">Tema Station 2 â€“ On Scene</span></div><span class="bp bg-amber">On Scene</span></div>
+          <div class="ar"><div class="av" style="background:var(--green)">R2</div><div><span class="ar-name">Rescue 02</span><span class="ar-sub">Available at base</span></div><span class="bp bg-green">Available</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TRAINING -->
+<div class="page" id="pg-training">
+  <div class="ph">
+    <div class="ph-l"><h1>Training & Development</h1><p>Track certifications, progress and skill gaps</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-training')"><i class="fa fa-plus"></i> New Module</button></div>
+  </div>
+  <div class="g21">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-list" style="color:var(--navy)"></i> Active Training Modules</h3><span class="bp bg-green">6 Active</span></div>
+        <div class="cb" id="training-list"></div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-chart-bar" style="color:var(--navy)"></i> Training Completion by Department</h3></div>
+        <div class="cb"><div class="chart-wrap"><canvas id="chart-training"></canvas></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-exclamation-circle" style="color:var(--red)"></i> Certs Expiring Soon</h3></div>
+        <div style="padding:.4rem 1.3rem">
+          <div class="ar"><div class="av" style="background:var(--red)">KA</div><div><span class="ar-name">Kofi Asante</span><span class="ar-sub">HAZMAT Level 2</span></div><span class="bp bg-red">5 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">EO</div><div><span class="ar-name">Esi Owusu</span><span class="ar-sub">First Responder</span></div><span class="bp bg-amber">12 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--amber)">JM</div><div><span class="ar-name">James Mensah</span><span class="ar-sub">Search & Rescue</span></div><span class="bp bg-amber">18 days</span></div>
+          <div class="ar"><div class="av" style="background:var(--navy)">AB</div><div><span class="ar-name">Abena Boateng</span><span class="ar-sub">Heavy Appliance Driver</span></div><span class="bp bg-navy">28 days</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-chart-pie" style="color:var(--navy)"></i> Skill Gap Analysis</h3></div>
+        <div class="cb">
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>HAZMAT Response</span><strong style="color:var(--red)">42%</strong></div><div class="pb"><div class="pf red" style="width:42%"></div></div></div>
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>Technical Rescue</span><strong style="color:var(--amber)">68%</strong></div><div class="pb"><div class="pf amber" style="width:68%"></div></div></div>
+          <div style="margin-bottom:.9rem"><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>First Aid / EMS</span><strong style="color:var(--green)">87%</strong></div><div class="pb"><div class="pf green" style="width:87%"></div></div></div>
+          <div><div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:.3rem"><span>Driver Training</span><strong style="color:var(--navy)">91%</strong></div><div class="pb"><div class="pf navy" style="width:91%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- COMMS -->
+<div class="page" id="pg-comms">
+  <div class="ph">
+    <div class="ph-l"><h1>Communication Centre</h1><p>Internal messaging, announcements and document hub</p></div>
+    <div class="ph-r"><button class="btn btn-primary btn-sm" onclick="openM('m-announce')"><i class="fa fa-bullhorn"></i> New Announcement</button></div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-bullhorn" style="color:var(--red)"></i> Announcements</h3></div>
+      <div style="padding:.6rem 1.3rem" id="comms-ann"></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-comments" style="color:var(--navy)"></i> Messages</h3>
+        <button class="btn btn-sm btn-primary" onclick="toast('Opening secure messenger','s')"><i class="fa fa-plus"></i> New</button>
+      </div>
+      <div style="padding:.6rem 1.3rem" id="comms-msgs"></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-folder" style="color:var(--amber)"></i> Document Repository</h3>
+      <button class="btn btn-outline btn-sm" onclick="toast('Upload ready','s')"><i class="fa fa-upload"></i> Upload</button>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Document</th><th>Category</th><th>Uploaded By</th><th>Date</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><i class="fa fa-file-pdf" style="color:var(--red);margin-right:.5rem"></i>GNFS Operations Manual 2024</td><td><span class="bp bg-navy">Policy</span></td><td>Comm. Tetteh</td><td>Jan 15, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-word" style="color:var(--blue);margin-right:.5rem"></i>Emergency Response Protocol v3</td><td><span class="bp bg-red">Emergency</span></td><td>Dep. Comm. Adu</td><td>Feb 2, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-excel" style="color:var(--green);margin-right:.5rem"></i>Q1 Staff Performance Report</td><td><span class="bp bg-green">Reports</span></td><td>Admin</td><td>Mar 1, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+          <tr><td><i class="fa fa-file-alt" style="color:var(--amber);margin-right:.5rem"></i>Training Schedule â€“ March 2026</td><td><span class="bp bg-amber">Training</span></td><td>Training Dept</td><td>Mar 5, 2026</td><td><button class="btn-ghost btn-sm" onclick="toast('Downloading...','s')"><i class="fa fa-download"></i></button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- REPORTS -->
+<div class="page" id="pg-reports">
+  <div class="ph">
+    <div class="ph-l"><h1>Reports & Analytics</h1><p>Operational insights and data-driven command decisions</p></div>
+    <div class="ph-r">
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting PDF...','s')"><i class="fa fa-file-pdf"></i> PDF</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting Excel...','s')"><i class="fa fa-file-excel"></i> Excel</button>
+      <button class="btn btn-outline btn-sm" onclick="toast('Exporting CSV...','s')"><i class="fa fa-file-csv"></i> CSV</button>
+    </div>
+  </div>
+  <div class="g2" style="margin-bottom:1.1rem">
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-fire" style="color:var(--red)"></i> Incident Statistics 2026</h3></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-incidents"></canvas></div></div>
+    </div>
+    <div class="card">
+      <div class="ch"><h3><i class="fa fa-calendar-times" style="color:var(--amber)"></i> Leave Distribution</h3></div>
+      <div class="cb"><div class="chart-wrap"><canvas id="chart-leave"></canvas></div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ch"><h3><i class="fa fa-star" style="color:var(--amber)"></i> Staff Performance Summary</h3>
+      <div style="display:flex;gap:.4rem">
+        <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.75rem;background:#fff;outline:none"><option>Q1 2026</option><option>Q4 2025</option></select>
+        <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.75rem;background:#fff;outline:none"><option>All Departments</option><option>Operations</option></select>
+      </div>
+    </div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Officer</th><th>Department</th><th>Attendance</th><th>Tasks Completed</th><th>Training</th><th>Rating</th></tr></thead>
+        <tbody>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--red)">KA</div><div><strong>Kofi Asante</strong><span>GNFS-001</span></div></div></td><td>Operations</td><td>96%</td><td>28/30</td><td><div class="pb" style="width:90px"><div class="pf green" style="width:90%"></div></div></td><td><span class="bp bg-green">Excellent</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--navy)">EO</div><div><strong>Esi Owusu</strong><span>GNFS-002</span></div></div></td><td>Training</td><td>88%</td><td>22/30</td><td><div class="pb" style="width:90px"><div class="pf amber" style="width:73%"></div></div></td><td><span class="bp bg-navy">Good</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--green)">JM</div><div><strong>James Mensah</strong><span>GNFS-003</span></div></div></td><td>Logistics</td><td>72%</td><td>18/30</td><td><div class="pb" style="width:90px"><div class="pf amber" style="width:60%"></div></div></td><td><span class="bp bg-amber">Average</span></td></tr>
+          <tr><td><div class="tdn"><div class="av" style="background:var(--amber)">AB</div><div><strong>Abena Boateng</strong><span>GNFS-004</span></div></div></td><td>Operations</td><td>100%</td><td>30/30</td><td><div class="pb" style="width:90px"><div class="pf green" style="width:100%"></div></div></td><td><span class="bp bg-green">Excellent</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="pg-settings">
+  <div class="ph"><div class="ph-l"><h1>System Settings</h1><p>Configure access control, security and system preferences</p></div></div>
+  <div class="g2">
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-shield-alt" style="color:var(--red)"></i> Role-Based Access Control</h3></div>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Role</th><th>Users</th><th>Access Level</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><strong>Administrator</strong></td><td>4</td><td><span class="bp bg-red">Full Access</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>Supervisor</strong></td><td>18</td><td><span class="bp bg-navy">Dept Access</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>Fire Officer</strong></td><td>98</td><td><span class="bp bg-green">View + Edit Own</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+              <tr><td><strong>NCO / Staff</strong></td><td>27</td><td><span class="bp bg-gray">View Only</span></td><td><button class="btn-ghost btn-sm"><i class="fa fa-edit"></i></button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-cog" style="color:var(--navy)"></i> General Settings</h3></div>
+        <div class="cb">
+          <div class="fg" style="margin-bottom:.9rem"><label>System Name</label><input value="GNFS StaffHub"></div>
+          <div class="fg" style="margin-bottom:.9rem"><label>Timezone</label><select><option>Africa/Accra (GMT+0)</option></select></div>
+          <div class="fg" style="margin-bottom:1rem"><label>Date Format</label><select><option>DD/MM/YYYY</option></select></div>
+          <button class="btn btn-primary btn-sm" onclick="toast('Settings saved successfully','s')"><i class="fa fa-save"></i> Save Changes</button>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:1.1rem">
+        <div class="ch"><h3><i class="fa fa-history" style="color:var(--amber)"></i> Audit Trail</h3></div>
+        <div style="padding:.6rem 1.3rem">
+          <div class="ann"><div class="ann-ic n"><i class="fa fa-sign-in-alt"></i></div><div class="ann-txt"><strong>Admin login</strong><span><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3e5f5a5357507e5950584d10595148105956">[email&#160;protected]</a> â€” Accra HQ</span></div><span class="ann-time">Just now</span></div>
+          <div class="ann"><div class="ann-ic r"><i class="fa fa-user-plus"></i></div><div class="ann-txt"><strong>New staff added</strong><span>Kwame Boateng â€” GNFS-148</span></div><span class="ann-time">1h ago</span></div>
+          <div class="ann"><div class="ann-ic g"><i class="fa fa-check-circle"></i></div><div class="ann-txt"><strong>Leave approved</strong><span>Esi Owusu â€” Annual Leave 6 days</span></div><span class="ann-time">3h ago</span></div>
+          <div class="ann"><div class="ann-ic a"><i class="fa fa-edit"></i></div><div class="ann-txt"><strong>Profile updated</strong><span>James Mensah â€” Rank changed</span></div><span class="ann-time">5h ago</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ch"><h3><i class="fa fa-lock" style="color:var(--green)"></i> Security Settings</h3></div>
+        <div class="cb">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--gray)">
+            <div><strong style="font-size:.83rem;display:block">Two-Factor Auth</strong><span style="font-size:.74rem;color:var(--text-lt)">Require 2FA for admin accounts</span></div>
+            <div style="width:40px;height:22px;background:var(--green);border-radius:11px;position:relative;cursor:pointer;flex-shrink:0"><div style="width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;right:3px;box-shadow:0 1px 3px rgba(0,0,0,.2)"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem;padding-bottom:.9rem;border-bottom:1px solid var(--gray)">
+            <div><strong style="font-size:.83rem;display:block">Session Timeout</strong><span style="font-size:.74rem;color:var(--text-lt)">Auto-logout after inactivity</span></div>
+            <select style="border:1.5px solid var(--gray);border-radius:7px;padding:.3rem .55rem;font-size:.78rem;background:#fff;outline:none"><option>30 minutes</option><option>1 hour</option></select>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div><strong style="font-size:.83rem;display:block">Password Policy</strong><span style="font-size:.74rem;color:var(--text-lt)">Min 8 chars, numbers & symbols</span></div>
+            <span class="bp bg-green">Enforced</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div><!-- end app -->
+
+<!-- MODALS -->
+<div class="mo" id="m-addstaff">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-user-plus" style="color:var(--red)"></i> Add New Staff Member</h3><button class="mclose" onclick="closeM('m-addstaff')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <input type="hidden" id="staff-index">
+      <div class="fsec"><h4>Personal Information</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Full Name *</label><input id="staff-name" placeholder="e.g. Kofi Asante"></div>
+          <div class="fg"><label>Service Number</label><input id="staff-sn" placeholder="GNFS-2026-XXX"></div>
+          <div class="fg"><label>Date of Birth</label><input id="staff-dob" type="text" placeholder="dd/mm/yy"></div>
+          <div class="fg"><label>Hometown</label><input id="staff-home" placeholder="e.g. Kumasi, Ashanti Region"></div>
+          <div class="fg"><label>Place of Birth</label><input id="staff-pob" placeholder="e.g. Accra"></div>
+          <div class="fg"><label>Gender *</label><div class="gender-checks"><label class="gopt"><input type="checkbox" id="staff-gender-male" onchange="toggleGender('Male', this.checked)"><span>Male</span></label><label class="gopt"><input type="checkbox" id="staff-gender-female" onchange="toggleGender('Female', this.checked)"><span>Female</span></label></div></div>
+        </div>
+      </div>
+      <div class="fsec"><h4>Service Information</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Rank *</label><select id="staff-rank-input"><option value="" disabled selected>Select rank</option><option>CFO</option><option>DCFO</option><option>ACFO I</option><option>ACFO II</option><option>DO I</option><option>DO II</option><option>DO III</option><option>ADO I</option><option>ADO II</option><option>STNO I</option><option>STNO II</option><option>ASTNO</option><option>SUB O</option><option>GO I</option><option>GO II</option><option>DGO</option><option>AGO</option><option>LFM</option><option>SNR FM</option><option>FM</option><option>LFW</option><option>SNR FW</option><option>FW</option></select></div>
+          <div class="fg"><label>Department *</label><select id="staff-dept-input"><option value="" disabled selected>Select department</option><optgroup label="OPERATIONS"><option>Incidence Response</option></optgroup><optgroup label="ADMINISTRATION"><option>Chief Fire Officerâ€™s Secretariat</option><option>Record & Statistics</option><option>Public Relations</option></optgroup><optgroup label="WELFARE"><option>Music</option><option>Guidance & Counseling</option><option>Religious Affairs</option><option>Messes/Canteens</option><option>Schemes/Associations</option></optgroup><optgroup label="FINANCE"><option>Accounts</option><option>Budget</option></optgroup><optgroup label="SPECIAL DUTIES"><option>Incident Investigation</option><option>Intelligence</option></optgroup><optgroup label="HUMAN RESOURCE, DEVELOPMENT & TRAINING"><option>Training</option><option>Human Resource Management</option><option>Sports and Recreation</option></optgroup><optgroup label="LOGISTICS"><option>Supply Chain Management</option><option>Estate</option><option>Project Office</option></optgroup><optgroup label="TECHNICAL SERVICES"><option>Maintenance</option><option>Transport</option></optgroup><optgroup label="POLICY, PLANNING, MONITORING & EVALUATION"><option>Policy Planning</option><option>Monitoring and Evaluation</option></optgroup><optgroup label="FIRE SAFETY"><option>Occupational Health and Safety</option><option>Public Education</option><option>Certification</option><option>Enforcement</option></optgroup><optgroup label="RURAL FIRES"><option>Bush fire Prevention and Suppression</option><option>Ecology Preservation</option></optgroup><optgroup label="LEGAL"><option>Legal</option></optgroup><optgroup label="HEALTH"><option>Health</option></optgroup><optgroup label="RESEARCH AND INFORMATION TECHNOLOGY"><option>Research</option><option>Information Communication Technology</option></optgroup><optgroup label="INTERNAL AUDIT"><option>Internal Audit</option></optgroup></select></div>
+          <div style="display:flex; gap:1rem; margin-bottom:1rem">
+            <div class="fg" style="flex:1"><label>Region *</label><select id="staff-region" onchange="updateStations(this.value)"><option value="" disabled selected>Select region</option><option>GREATER ACCRA REGION</option><option>TEMA REGION</option><option>CENTRAL REGION</option><option>ASHANTI REGION</option><option>EASTERN REGION</option><option>OTI REGION</option><option>VOLTA REGION</option><option>NORTHERN REGION</option><option>BONO / BONO EAST / AHAFO</option><option>WESTERN REGION</option><option>UPPER REGIONS</option><option>OTHER REGIONS</option></select></div>
+            <div class="fg" style="flex:1"><label>Station</label><select id="staff-station"><option value="" disabled selected>Select region first</option></select></div>
+          </div>
+          <div class="fg"><label>Date of Appointment</label><input id="staff-appointment" type="text" placeholder="dd/mm/yy"></div>
+        </div>
+      </div>
+      <div class="fsec"><h4>Contact Details</h4>
+        <div class="fgrid">
+          <div class="fg"><label>Phone Number</label><input id="staff-phone" placeholder="+233 XX XXX XXXX"></div>
+          <div class="fg"><label>Email Address</label><input id="staff-email" type="email" placeholder="name@gnfs.gov.gh"></div>
+          <div class="fg"><label>Emergency Contact Name</label><input id="staff-emerg-name" placeholder="Next of kin name"></div>
+          <div class="fg"><label>Emergency Contact Phone</label><input id="staff-emerg-phone" placeholder="+233 XX XXX XXXX"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-addstaff')">Cancel</button>
+      <button class="btn btn-primary" id="staff-save-btn" onclick="saveStaff();"><i class="fa fa-save"></i> Save Profile</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-incident">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-exclamation-triangle" style="color:var(--red)"></i> Report New Incident</h3><button class="mclose" onclick="closeM('m-incident')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg"><label>Incident Type *</label><select><option>Structure Fire</option><option>Bush/Forest Fire</option><option>Vehicle Fire</option><option>Gas Leak</option><option>HAZMAT</option><option>Rescue Operation</option><option>Medical Emergency</option></select></div>
+        <div class="fg"><label>Priority Level *</label><select><option>Critical</option><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="fg full"><label>Location *</label><input placeholder="Full address or GPS coordinates"></div>
+        <div class="fg full"><label>Description *</label><textarea placeholder="Describe the incident in detail..."></textarea></div>
+        <div class="fg"><label>Estimated Casualties</label><input type="number" placeholder="0" min="0"></div>
+        <div class="fg"><label>Resources Required</label><select><option>1 Engine</option><option>2 Engines + Tanker</option><option>Full Response</option><option>HazMat Only</option></select></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-incident')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeM('m-incident');toast('Incident reported â€” units dispatched!','s')"><i class="fa fa-paper-plane"></i> Dispatch Response</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-leave">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-calendar-alt" style="color:var(--navy)"></i> Submit Leave / Permission Request</h3><button class="mclose" onclick="closeM('m-leave')" title="Close"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Leave Type *</label>
+          <select id="leave-type">
+            <option value="">-- Select Leave Type --</option>
+            <option>Annual Leave</option>
+            <option>Sick Leave</option>
+            <option>Study Leave</option>
+            <option>Compassionate Leave</option>
+            <option>Proponentative Leave</option>
+            <option>Casual Leave</option>
+            <option>Maternity Leave</option>
+            <option>Permission</option>
+          </select>
+        </div>
+        <div class="fg full"><label>Duration (state in writing) *</label><input type="text" id="leave-duration" placeholder="e.g. I request five (5) working days leave"></div>
+        <div class="fg"><label>Start Date *</label><input type="text" id="leave-start" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>End Date *</label><input type="text" id="leave-end" placeholder="dd/mm/yy"></div>
+        <div class="fg full"><label>Resumption Date *</label><input type="text" id="leave-resumption" placeholder="dd/mm/yy"></div>
+        <div class="fg full"><label>Leave Address *</label><input type="text" id="leave-address" placeholder="Address where you will be during leave period"></div>
+        <div class="fg full"><label>Reporting Supervisor *</label><select id="leave-supervisor">
+          <option value="">-- Select Supervisor --</option>
+          <option>Dep. Comm. Adu</option>
+          <option>Sr. Officer Tetteh</option>
+          <option>Asst. Comm. Agyei</option>
+        </select></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-leave')">Cancel</button>
+      <button class="btn btn-navy" onclick="submitLeaveRequest()"><i class="fa fa-paper-plane"></i> Submit Request</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-task">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-tasks" style="color:var(--navy)"></i> Create Task</h3><button class="mclose" onclick="closeM('m-task')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Task Title *</label><input placeholder="e.g. Equipment maintenance check"></div>
+        <div class="fg"><label>Priority</label><select><option>High</option><option>Medium</option><option>Low</option></select></div>
+        <div class="fg"><label>Assign To</label><select><option>Kofi Asante</option><option>Esi Owusu</option><option>James Mensah</option><option>Abena Boateng</option><option>Entire Team</option></select></div>
+        <div class="fg"><label>Deadline</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>Category</label><select><option>Maintenance</option><option>Operations</option><option>Training</option><option>Administrative</option></select></div>
+        <div class="fg full"><label>Description</label><textarea placeholder="Detailed task instructions and requirements..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-task')">Cancel</button>
+      <button class="btn btn-navy" onclick="closeM('m-task');toast('Task created and assigned','s')"><i class="fa fa-plus"></i> Create Task</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-announce">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-bullhorn" style="color:var(--red)"></i> New Announcement</h3><button class="mclose" onclick="closeM('m-announce')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Title *</label><input placeholder="Announcement title..."></div>
+        <div class="fg"><label>Category</label><select><option>General</option><option>Emergency</option><option>Training</option><option>Administrative</option></select></div>
+        <div class="fg"><label>Audience</label><select><option>All Staff</option><option>Officers Only</option><option>Supervisors Only</option></select></div>
+        <div class="fg full"><label>Message *</label><textarea rows="4" placeholder="Announcement content..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-announce')">Cancel</button>
+      <button class="btn btn-primary" onclick="closeM('m-announce');toast('Announcement published to all staff','s')"><i class="fa fa-paper-plane"></i> Publish</button>
+    </div>
+  </div>
+</div>
+
+<div class="mo" id="m-training">
+  <div class="modal">
+    <div class="mhd"><h3><i class="fa fa-graduation-cap" style="color:var(--navy)"></i> Create Training Module</h3><button class="mclose" onclick="closeM('m-training')"><i class="fa fa-times"></i></button></div>
+    <div class="mbody">
+      <div class="fgrid">
+        <div class="fg full"><label>Module Title *</label><input placeholder="e.g. Advanced Fire Suppression Techniques"></div>
+        <div class="fg"><label>Category</label><select><option>Fire Suppression</option><option>HAZMAT</option><option>Technical Rescue</option><option>First Aid</option><option>Leadership</option></select></div>
+        <div class="fg"><label>Duration</label><input placeholder="e.g. 3 days"></div>
+        <div class="fg"><label>Lead Instructor</label><input placeholder="Instructor name"></div>
+        <div class="fg"><label>Start Date</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg"><label>End Date</label><input type="text" placeholder="dd/mm/yy"></div>
+        <div class="fg full"><label>Description</label><textarea placeholder="Training objectives and overview..."></textarea></div>
+      </div>
+    </div>
+    <div class="mfoot">
+      <button class="btn btn-outline" onclick="closeM('m-training')">Cancel</button>
+      <button class="btn btn-navy" onclick="closeM('m-training');toast('Training module created','s')"><i class="fa fa-save"></i> Create Module</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="app.js"></script>
+</body>
+</html>
